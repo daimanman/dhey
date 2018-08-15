@@ -1,0 +1,7 @@
+{"AvgTotal":0.0230677,"Fastest":0.0230677,"Slowest":0.0230677,"Average":0.0230677,"Rps":43.35065914677233,"AvgConn":0.0040084,"AvgDNS":0,"AvgReq":0.0010036,"AvgRes":0.0170528,"AvgDelay
+":0.0010029,"ConnMax":0,"ConnMin":0,"DnsMax":0,"DnsMin":0,"ReqMin":0.0010036,"ReqMax":0.0010036,"ResMin":0.0010036,"ResMax":0.0170528,"DelayMax":0.0010029,"DelayMin":0.0010029,"Lats":[0.023
+0677],"ConnLats":[0],"DnsLats":[0],"ReqLats":[0.0010036],"ResLats":[0.0170528],"DelayLats":[0.0010029],"Total":23067700,"ErrorDist":{},"StatusCodeDist":{"200":1},"SizeTotal":46045,"SizeReq"
+:46045,"NumRes":1,"LatencyDistribution":[{"Percentage":0,"Latency":0},{"Percentage":0,"Latency":0},{"Percentage":0,"Latency":0},{"Percentage":0,"Latency":0},{"Percentage":0,"Latency":0},{"P
+ercentage":0,"Latency":0},{"Percentage":0,"Latency":0}],"Histogram":[{"Mark":0.0230677,"Count":1,"Frequentcy":1},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Fre
+quentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{
+"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0},{"Mark":0.0230677,"Count":0,"Frequentcy":0}]}

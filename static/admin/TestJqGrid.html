@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestGrid1</title>
+    <script src="jquery/jquery-1.8.3.min.js"></script>
+    <script src="plugins/layui/layui.js"></script>
+    <script src="jqgrid/js/jquery.jqGrid.min.js"></script>
+    <script src="jqgrid/js/i18n/grid.locale-cn.js"></script>
+
+
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" />
+    <link rel="stylesheet" href="jqgrid/theme/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" href="jqgrid/css/ui.jqgrid.css" />
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css"/>
+</head>
+<body>
+<div class="jqGrid_wrapper" style="width:85%;margin:10px 200px;">
+    <table id="tableDiv"></table>
+    <div id="pagerDiv"></div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+   var  jqGridTabObj = $("#tableDiv");
+    var opGrid = {
+        reSize: function () {
+            var width = $('.jqGrid_wrapper').width();
+            var height = $(window).height();//parent.get_MainContainerHeight();
+            var searchBox = 120, jqGrid_head = 55, jqGrid_pager = 30, jqGrid_footer = 45;
+            height = height - searchBox - jqGrid_head - jqGrid_pager - jqGrid_footer;
+            jqGridTabObj.setGridWidth(width);
+            jqGridTabObj.setGridHeight(height+70);
+        },
+        loadGrid: function () {
+
+
+            jqGridTabObj.jqGrid({
+                url: "data.json",
+                datatype: "json",
+                mtype : "get",
+                height: 500,
+                autowidth: false,
+                shrinkToFit: true,
+                rownumbers:true,
+                rowNum: 10,
+                rowList: [10,15, 30, 50, 100, 500, 1000],
+                colModel: [
+                    {name: 'id',index: 'id',width:50, align: "center", sortable: false,label:"ID"},
+                    {name: 'brandName',index: 'brand_id',width: 50, align: "center", sortable: true,label:"品牌"},
+                    {name: 'serialName',index: 'serial_id',width: 50, align: "center", sortable: true,label:"型号"},
+                    {name: 'carNo',index: 'car_no',width: 50, align: "center", sortable: true,label:"车牌"},
+                    {name: 'seatNum',index: 'seat_num',width:20, align: "center", sortable: true,label:"座位数"},
+                    {name:"id",sortable:false,label:"ceshi",formatter:function(cellVal,opts,rowObj){
+                        return "--";
+                    },
+                        cellattr: function(rowId, value, rowObject, colModel, arrData) {
+                            return ' rowspan=2 ';
+                        }
+                    }
+                ],
+                regional : 'cn',
+                pager: "#pagerDiv",
+                viewrecords: true,
+                caption: "",
+                multiselect:true,
+                postData:{},
+                jsonReader:{
+                    id:"id",
+                    root:"datas",
+                    page:"page",
+                    total:"pages",
+                    records:"total"
+                }
+            });
+        }
+    };
+    opGrid.loadGrid();
+    opGrid.reSize();
+    $(window).bind('resize', function () {
+        opGrid.reSize();
+    });
+
+
+</script>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TestB2B</title>
+    <style>
+        .box-flex, .p-row-div {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .top-circle {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .circle {
+            width: 100px;
+            height: 100px;
+            -moz-border-radius: 50px;
+            -webkit-border-radius: 50px;
+            border-radius: 50px;
+            text-align: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .text {
+            text-align: center;
+            margin-top: 10px;
+            width: 100px;
+        }
+
+        .circle span {
+            display: inline-block;
+            margin-top: 42px;
+        }
+
+        .circle-ordernum,
+        .circle-wqr {
+            background-color: #FF5722;
+        }
+
+        .circle-peoplenum,
+        .circle-yl {
+            background-color: #01AAED;
+        }
+
+        .circle-money,
+        .circle-jw {
+            background-color: #009688;
+        }
+        .circle-qx{
+            background-color: #bfbfbf;
+        }
+
+        .top-title {
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .today-data, .today-order {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .today-data {
+            width: 400px;
+        }
+
+        .today-order {
+            width: 550px;
+            margin-left:20px;
+        }
+    </style>
+</head>
+<body>
+<!-- 行div -->
+<div class="p-row-div">
+    <!-- 今日数据 -->
+    <div class="today-data">
+        <div class="top-title">
+            <span>今日数据</span>
+        </div>
+        <div class="box-flex">
+            <div class="top-circle">
+                <div class="circle-ordernum circle">
+                    <span>32</span>
+                </div>
+                <div class="text">
+                    <span>订单数</span>
+                </div>
+            </div>
+            <div class="top-circle">
+                <div class="circle-peoplenum circle">
+                    <span>100大10小</span>
+                </div>
+                <div class="text">
+                    <span>人数</span>
+                </div>
+            </div>
+            <div class="top-circle">
+                <div class="circle-money circle">
+                    <span>¥9000</span>
+                </div>
+                <div class="text">
+                    <span>金额</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 今日订单 -->
+    <div class="today-order">
+        <div class="top-title">
+            <span>今日订单</span>
+        </div>
+        <div class="box-flex">
+            <div class="top-circle">
+                <div class="circle-wqr circle">
+                    <span>32</span>
+                </div>
+                <div class="text">
+                    <span>未确认</span>
+                </div>
+            </div>
+            <div class="top-circle">
+                <div class="circle-yl circle">
+                    <span>20</span>
+                </div>
+                <div class="text">
+                    <span>预留</span>
+                </div>
+            </div>
+            <div class="top-circle">
+                <div class="circle-jw circle">
+                    <span>1000</span>
+                </div>
+                <div class="text">
+                    <span>加位</span>
+                </div>
+            </div>
+            <div class="top-circle">
+                <div class="circle-qx circle">
+                    <span>1000</span>
+                </div>
+                <div class="text">
+                    <span>已取消</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+</body>
+</html>

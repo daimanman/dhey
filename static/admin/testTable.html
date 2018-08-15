@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestTable</title>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="jquery/template.js"></script>
+</head>
+<style>
+        table{
+            border-top:1px solid #000;
+            border-left: 1px solid #000;
+
+        }
+        td{
+            border-bottom:1px solid #000;
+            border-right: 1px solid #000;
+            padding:5px;
+        }
+
+</style>
+<body>
+<table  border="0" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>姓名</td>
+                <td>年龄</td>
+                <td>大小</td>
+                <td>状态</td>
+                <td>操作</td>
+            </tr>
+        </thead>
+    <tbody>
+        <tr id="tr1">
+            <td id="td1">1</td>
+            <td id="td2">李四</td>
+            <td>23-0</td>
+            <td>2</td>
+            <td>灰色空间阿含经阿克萨</td>
+            <td rowspan="3">sjakldsl</td>
+
+        </tr>
+
+
+
+        <tr>
+            <td>122</td>
+            <td>李四</td>
+            <td>23</td>
+            <td>12</td>
+            <td>灰色空间阿含经阿克萨</td>
+            <td>sjakldsl</td>
+        </tr>
+
+    </tbody>
+</table>
+</body>
+</html>
+<script type="text/html" id="tabTem">
+
+    <tr>
+        <td>23-1</td>
+        <td>2</td>
+        <td>灰色空间阿含经阿克萨</td>
+    </tr>
+
+    <tr>
+        <td>23-2</td>
+        <td>2</td>
+        <td>灰色空间阿含经阿克萨</td>
+    </tr>
+
+</script>
+<script type="text/javascript">
+
+    function getDateStr(dateStr,addOrMinusDay){
+        if(dateStr && addOrMinusDay){
+            var curDate = new Date(dateStr);
+            var newDate = new Date(curDate.getTime()+addOrMinusDay*86400000);
+            var fullYear = newDate.getFullYear();
+            var month = newDate.getMonth()+1;
+            var day = newDate.getDate();
+            var monthStr = "";
+            var dayStr  = "";
+            if(month < 10){
+                monthStr = "0"+month;
+            }else{
+                monthStr = ""+month;
+            }
+            if(day < 10){
+                dayStr = "0"+day;
+            }else{
+                dayStr = ""+day;
+            }
+            return fullYear+"-"+monthStr+"-"+dayStr;
+        }
+        return dateStr;
+    }
+    (function(){
+        console.info(template("tabTem",{}));
+            $(template("tabTem",{})).insertAfter("#tr1");
+            $("#td1,#td2").attr("rowspan",3);
+
+
+
+
+    })();
+</script>
+

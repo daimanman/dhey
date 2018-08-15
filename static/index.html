@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Static HTML</title>
+    <script type="text/javascript" src="vue.js"></script>
+</head>
+<body>
+    <h1>Hello World !</h1>
+    <div id="app">
+        {{ message }}
+    </div>
+    <div>
+        <img src="2.png"  />
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    (function(){
+        var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!'
+      }
+    })
+    })()  
+</script>

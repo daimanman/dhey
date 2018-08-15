@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestQ</title>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+    DXM
+
+</body>
+</html>
+<script type="text/javascript" id="baseSc">
+    var QNR = {}
+    $.ajax({
+        url:"4004751524.html",
+        dataType:"html",
+        success:function(html){
+            var newJS = [];
+            $(html).each(function(k,v){
+                var text = $(v).html();
+                if($(v).is("script")){
+                    $(text.split(";")).each(function(i,v){
+                        if(v.indexOf("document.domain")  == -1){
+                            newJS.push(v);
+                        }
+                    });
+                    return false;
+                }
+                return true;
+            });
+            var jsStr = newJS.join(";")+";";
+            eval(jsStr);
+            console.info(QNR);
+        }
+    });
+
+
+</script>
+
+<script type="text/javascript" id="addSc">
+
+</script>

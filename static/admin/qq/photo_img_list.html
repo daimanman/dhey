@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="never">
+    <title>PhotoImg</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/vuejs-uib-pagination.js"></script>
+    <script src="../plugins/layui/layui.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script type="text/javascript" src="js/config.js"></script>
+    <script src="js/FormParams.js"></script>
+    <link rel="stylesheet" href="../plugins/layui/css/layui.css" />
+    <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/qq.css"/>
+    <style>
+        .p-name .name{
+            width:100%;
+        }
+        #showDestImg div{
+            text-align: center;
+            margin-top: 20px;
+        }
+        #showDestImg span{
+            display: inline-block;
+            height: 32px;
+            width: 32px;
+            background-repeat:no-repeat;
+            cursor: pointer;
+
+
+
+        }
+        #showDestImg .span-left{
+            background-image: url("img/l.png") ;
+            margin-right: 100px;
+        }
+        #showDestImg .span-right{
+            background-image: url("img/r.png");
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="flex-container">
+
+    <div class="flex-item" v-for=" (img,index)  in imgs ">
+        <div class="p-img" :imgid="img.id" >
+            <img  v-bind:src="img.murl" @click="showBigImg" :url="img.url" :index="index" />
+        </div>
+        <div class="p-name">
+            <span class="name" :title="img.poiname" >{{ img.uploadtime }}</span>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="apppage" class="flex-container">
+    <uib-pagination :total-items="bigTotalItems" :items-per-page="rows"  @change="pageChanged()" v-model="pagination2" :max-size="maxSize" class="pagination-sm " previous-text="上一页" next-text="下一页" first-text="第一页" last-text="最后一页" :boundary-links="true" :force-ellipses="true"></uib-pagination>
+    <div class="page-title pagination pagination-sm " style="text-align: center;">  <span>共{{bigTotalItems}}条记录</span>  <span>{{pagination2.currentPage}} / {{pagination2.numPages}}</span> </div>
+</div>
+
+
+<div id="showDestImg" style="display: none;">
+    <div><span v-if="pre" class="span-left" @click="preClick"></span><span v-if="next" class="span-right" @click="nextClick"></span></div>
+    <div>
+          <img :src="destUrl"  />
+    </div>
+
+
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+    var layer;
+    layui.use('layer', function(){
+        layer = layui.layer;
+    });
+    var vueInsstance;
+    var pageApp;
+    var formUtils = yihg_utils_fun;
+    var showDestImgApp;
+
+    var params = formUtils.parseUrlParams(location.href);
+    function getPhotoData(page,rows){
+        params["page"] = page;
+        params["rows"] = rows;
+        $.ajax({
+            url:_webConfig.api+_webConfig.img_list,
+            dataType:"json",
+            type:"post",
+            contentType:"applicattion/json;charset=utf-8",
+            data:JSON.stringify(params),
+            success:function(result){
+                if(!vueInsstance){
+                    vueInsstance = new Vue({
+                        el:"#app",
+                        data:{
+                            "ps":result.datas
+                        },
+                        computed:{
+                            imgs:function(){
+                                return this.ps;
+                            }
+                        },
+                        methods:{
+                            showBigImg:function(e){
+                                var url = $(e.target).attr("url");
+                                var index = $(e.target).attr("index");
+                                if(!showDestImgApp){
+                                    showDestImgApp  = new Vue({
+                                        el:"#showDestImg",
+                                       data:{
+                                           destUrl:url,
+                                           index:parseInt(index),
+                                           pre:true,
+                                           next:true
+                                       },
+                                        methods:{
+                                            preClick:function(){
+                                                this.next = true;
+                                                this.index = this.index-1;
+                                                if(this.index < 0){
+                                                    this.index = 0;
+                                                    this.pre = false;
+
+                                                }else{
+                                                    this.pre = true;
+                                                }
+                                                this.destUrl = vueInsstance.ps[this.index]["url"];
+                                            },
+                                            nextClick:function(){
+                                                this.pre = true;
+                                                this.index = this.index+1;
+                                                if(this.index >= vueInsstance.ps.length){
+                                                    this.index = vueInsstance.ps.length - 1;
+                                                    this.next = false;
+
+                                                }else{
+                                                    this.next = true;
+                                                }
+                                                console.info(vueInsstance.ps[this.index]);
+                                                this.destUrl = vueInsstance.ps[this.index]["url"];
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    showDestImgApp.destUrl = url;
+                                    showDestImgApp.index = index;
+                                }
+                                layer.open({
+                                    type:1,
+                                    content:$("#showDestImg"),
+                                    area:["800px","500px"],
+                                    maxmin:true
+                                });
+                            }
+                        },
+                        filters: {
+                            stromit:function(value){
+
+                                var size = 5;
+                                if(value && value.length > size ){
+                                    return value.substr(0,size)+"..";
+                                }
+                                return value;
+                            }
+                        }
+                    });
+                }else{
+                    vueInsstance.ps = result.datas;
+                }
+
+                pageInfo(page,result.total);
+
+            }
+        });
+    }
+
+    getPhotoData(1,40);
+
+    function pageInfo(page,totalnums){
+        if(!pageApp){
+            pageApp =  new Vue({
+                el: "#apppage",
+                data: {
+
+                    pagination2: { currentPage: page },
+
+                    setPage: function(pageNo) {
+                        this.pagination2.currentPage = pageNo;
+                    },
+
+                    pageChanged: function() {
+                        console.log('Page changed to: ' + this.pagination2.currentPage);
+                        getPhotoData(this.pagination2.currentPage,40);
+                    },
+
+                    maxSize: 15,
+                    bigTotalItems: totalnums,
+                    rows:40
+                }
+            });
+        }else{
+            pageApp.setPage(page);
+            pageApp.bigTotalItems = totalnums;
+        }
+
+    }
+
+
+
+
+
+</script>

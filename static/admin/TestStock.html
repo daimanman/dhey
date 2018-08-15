@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试库存</title>
+
+
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+
+    <link rel="stylesheet" href=" http://localhost/web-base/assets/plugins/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="http://localhost/web-base/assets/plugins/zlDate/zlDate_stock_select.css" />
+    <script type="text/javascript" src="http://localhost/web-base/assets/plugins/zlDate/zlDate.js"></script>
+    <style>
+        .show-pirce-detail{
+
+            color: blue;
+            display: inline-block;
+            width:60%;
+            margin-left:1px;
+
+        }
+        .show-pirce-detail:hover{
+            text-decoration: underline;
+        }
+
+
+        #dicStock .calendar .calendar_right{
+            width:411px;
+
+        }
+        #dicStock .calendar{
+            width:470px;
+
+        }
+
+    </style>
+</head>
+<body>
+    <div id="dicStock">
+
+    </div>
+
+<input type="button" value="ok"  id="ok" />
+    <input type="button" value="no"  id="no" />
+    <input type="button" value="get"  id="get" />
+
+</body>
+</html>
+<script type="text/javascript">
+    (function(){
+       var stockCom = new  B2BStockComponent({
+          url:"stock.json",
+           container:"dicStock"
+       });
+        stockCom.create();
+
+        $("#ok").on("click",function(e){
+            stockCom.checkAll();
+        });
+        $("#no").on("click",function(e){
+            stockCom.cancelAll();
+        });
+        $("#get").on("click",function(e){
+           console.info(stockCom.getCheckDates());
+        });
+
+        $("#dicStock").on("click",".show-pirce-detail",function(e){
+           alert($(this).attr("price-id"));
+            e.stopPropagation();
+
+
+        });
+
+    })();
+</script>

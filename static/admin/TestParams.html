@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> TestParams</title>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="jquery/FormParams.js"></script>
+</head>
+<body>
+        <div id="topDiv">
+            <input type="text" name="name" value="dxm" />
+            <input type="text" name="age" value="12" />
+            <select name="dog">
+
+                <option selected value="Dog">Dog</option>
+                <option  value="DogCat">DogCat</option>
+            </select>
+            <input type="checkbox" name="btns" value="许多思考2" checked/>
+            <input type="checkbox" name="btns" value="许多思考3" checked/>
+            <input type="checkbox" name="btns" value="许多思考4" checked/>
+
+            <input type="radio" name="btn" value="许多思考2" checked/>
+            <input type="radio" name="btn" value="许多思考3" />
+            <input type="radio" name="btn" value="许多思考4" />
+
+            <textarea name="remark">djskjks</textarea>
+
+            <span> <input type="text" name="widths" value="12" /></span>
+
+
+           <div class="params-group" group-name="friends" id="pgd">
+
+               <input type="text" name="type" value="男" id="fd" />
+               <span> <input type="text" name="height" value="88888" id="fd1" /></span>
+               <span> <input type="text" name="width" value="7777" /></span>
+
+               <div class="params-group" group-name="schools" id="fd2">
+                   <input type="text" name="sname" value="清华----" />
+                   <input type="text" name="money" value="12202" />
+                   <div class="params-group" group-name="sports">
+                       <input type="text" name="sportname" value="难求" />
+                       <input type="text" name="year" value="1200" />
+                   </div>
+               </div>
+
+               <div class="params-group" group-name="schools">
+                   <input type="text" name="sname" value="北大" />
+                   <input type="text" name="money" value="12202" />
+               </div>
+
+           </div>
+
+
+            <div class="params-group" group-name="friends">
+                <input type="text" name="type" value="男1" />
+                <input type="text" name="height" value="1202" />
+            </div>
+
+            <div class="params-group" group-name="sports">
+                <input type="text" name="sportname" value="难求" />
+                <input type="text" name="year" value="1200" />
+            </div>
+            <div class="params-group" group-name="sports">
+                <input type="text" name="sportname" value="斯诺克" />
+                <input type="text" name="year" value="1202" />
+            </div>
+
+            <div class="params-group" group-name="sports1">
+                <input type="text" name="sportname" value="难求1" />
+                <input type="text" name="year" value="12001" />
+            </div>
+            <div class="params-group" group-name="sports1">
+                <input type="text" name="sportname" value="斯诺克1" />
+                <input type="text" name="year" value="1202" />
+            </div>
+
+        </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var formUtils = yihg_utils_fun;
+    console.info(formUtils.getGroupParams("topDiv"));
+
+
+ </script>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserList</title>
+    <link rel="stylesheet" href="../plugins/layui/css/layui.css" media="all" />
+</head>
+<body>
+        DXM
+        <div style="width: 400px;margin: 0 auto;">
+            <button id="add" class="layui-btn">向选项卡添加一个tab</button>
+            <button id="remove" class="layui-btn">移除当前选项卡</button>
+        </div>
+</body>
+</html>
+<script type="text/javascript" src="../plugins/layui/layui.js"></script>
+<script type="text/javascript">
+    (function(){
+
+       layui.use(['layer'],function(){
+            $ = layui.jquery;
+            $('#add').on('click', function () {
+                var tab = parent.tab;
+
+                tab.tabAdd({
+                    href:'qq/add1.html',
+                    icon:'fa-github',
+                    title:'DXM1'
+                });
+            });
+        });
+    })();
+</script>

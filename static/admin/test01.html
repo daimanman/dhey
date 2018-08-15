@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test01</title>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+
+</head>
+<body>
+Test
+</body>
+</html>
+<script type="text/javascript">
+
+    $.ajax({
+        url:"http://localhost/qaweb/ps.html",
+        type:"get",
+        dataType:"text",
+        success:function(data){
+            console.info($(data).filter("script:eq(5)").text());
+            $("html").append($(data).filter("script:eq(5)"));
+            showPhotos();
+        }
+    })
+</script>
+<script type="text/javascript" id="getPhoto1">
+  var nx = {};
+  nx.webpager = {};
+  nx.data = {};
+  var define = {};
+  nx.stats = {};
+  nx.stats.ps = {};
+  nx.dateplus.getTime = function(){
+      return 0;
+  }
+  nx.stats.ps.add = function(){}
+  define.config = function(){
+
+  }
+
+  function showPhotos(){
+      console.info(nx.data.photo);
+  }
+</script>

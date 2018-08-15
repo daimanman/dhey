@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestTable</title>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+</head>
+<style>
+        table.first{
+            border-top:1px solid #000;
+            border-left: 1px solid #000;
+
+        }
+        table.inner{
+
+            width: 100%;
+        }
+        table.first td,
+        table.first th{
+            border-bottom:1px solid #000;
+            border-right: 1px solid #000;
+        }
+        table.inner td{
+
+        }
+
+</style>
+<body>
+<table  border="0" cellspacing="0" cellpadding="0" class="first">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>姓名</th>
+                <th width="40">年龄</th>
+                <th width="40">大小</th>
+                <th width="80">状态</th>
+                <th width="60">操作</th>
+            </tr>
+        </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>李四</td>
+            <td>23-0</td>
+            <td>2</td>
+            <td>灰色空间阿含经阿克萨</td>
+            <td>sjakldsl</td>
+        </tr>
+        <tr>
+            <td>122</td>
+            <td>李四</td>
+            <td>23</td>
+            <td>12</td>
+            <td>灰色空间阿含经阿克萨</td>
+            <td>sjakldsl</td>
+        </tr>
+        <tr>
+            <td>123</td>
+            <td>李四</td>
+            <td colspan="4">
+                <table class="inner">
+                    <tr>
+                        <td width="40">23</td>
+                        <td width="40">12</td>
+                        <td width="80">灰色空间阿含经阿克萨</td>
+                        <td width="60">sjakldsl</td>
+                    </tr>
+                </table>
+            </td>
+
+
+        </tr>
+        <tr>
+            <td>124</td>
+            <td>李四</td>
+            <td>23</td>
+            <td>12</td>
+            <td>灰色空间阿含经阿克萨</td>
+            <td>sjakldsl</td>
+        </tr>
+
+
+    </tbody>
+</table>
+</body>
+</html>

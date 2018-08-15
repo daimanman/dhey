@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script type="text/javascript" src="../jquery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../jquery/jquery.cookie.js"></script>
+</head>
+<>
+<input id="text" type="text"/>
+<input type="button" id="stn" value="send" /><br/>
+<div id="ct">
+</div>
+
+
+<input type="button" id="sendHttp" value="ok"/>
+
+
+
+</body>
+</html>
+<script type="text/javascript">
+
+    var wsUri ="ws://localhost:23455/erpcenter-sales-web/websocket?domain=1000";
+    var websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) {
+        console.info("is open");
+        websocket.send("DXM");
+    };
+    websocket.onerror = function(evt) {
+        console.info("is error");
+    };
+
+    websocket.onmessage = function(evt) {
+
+       var info = {};
+       var baseInfoJq =  $(evt.data);
+       var resultNum = baseInfoJq.filter("#resultNum").val();
+       var soffset = baseInfoJq.filter("#soffset").val();
+       info["resultNum"] = resultNum;
+       info["offset"] = soffset;
+       info["gender"] = 0;
+       info["schoolId"] = 1001;
+       var users = [];
+       $("#ct").text(soffset);
+
+       var topJq =  baseInfoJq.filter(".list-follow");
+
+        topJq.find("ol.search_log").children().each(function(i,o){
+
+           var u = {};
+           var oJq = $(o);
+           var pops =  eval("("+oJq.find(".info a.user_lively").attr("popval")+")");
+           u["logoImg"] = oJq.find(".Userimg .user_header img").attr("data-src");
+           var uinfo = oJq.find(".actions a.ui-button");
+           u["name"] = uinfo.attr("data.name");
+           u["rid"] = uinfo.attr("data-id");
+           u["popValue"] = pops["popValue"] || 0;
+            users.push(u);
+       });
+        info["users"] = users;
+
+        websocket.send(JSON.stringify(info));
+
+
+    };
+    websocket.onclose = function(evt) {
+        console.info("is close")
+    };
+
+
+    $("#stn").on("click",function(e){
+        var p = {"type":1000,"content":$("#text").val()};
+        websocket.send(JSON.stringify(p));
+    });
+
+    $("#sendHttp").on("click",function(e){
+       $.ajax({
+           url:"http://localhost:23455/erpcenter-sales-web/rr/sendBase"
+       }) ;
+    });
+
+</script>

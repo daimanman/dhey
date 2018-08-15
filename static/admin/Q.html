@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link type="text/css" rel="stylesheet" href="http://172.17.42.197:8080/prototype/b2b-editorder/static/css/components.css"/>
+    <link type="text/css" rel="stylesheet" href="http://172.17.42.197:8080/prototype/b2b-editorder/static/css/base.css"/>
+    <link type="text/css" rel="stylesheet" href="http://172.17.42.197:8080/prototype/b2b-editorder/css/editOrder.css">
+    <script src="jquery/jquery-1.8.3.min.js"></script>
+    <script src="http://172.17.42.197:8080/prototype/b2b-editorder/js/common.js"></script>
+    <title>订单确认</title>
+</head>
+
+<body>
+<div class="container order-main">
+    <div class="confirm-order">
+        <div class="product-info">
+            <div class="product-title">
+                【一价全包】昆明，丽江，大理双飞6日游
+            </div>
+            <div class="product-desc">
+                <div class="item">
+                    <label>产品编号：</label>
+                    <span>1350461</span>
+                </div>
+                <div class="item">
+                    <label>团期：</label>
+                    <span>2017-11-24</span>
+                </div>
+                <div class="item">
+                    <label>供应商：</label>
+                    <span>云南云美旅行社</span>
+                </div>
+                <div class="item">
+                    <label>预订员：</label>
+                    <span class="mr10">张三</span><span>13470598579</span>
+                </div>
+            </div>
+        </div>
+        <div class="choice-package">
+            <p>套餐选择：</p>
+            <div class="sub-packages">
+                <span class="item">套餐A</span>
+                <span class="item">套餐B</span>
+                <span class="item">套餐C</span>
+                <span class="item">套餐D</span>
+            </div>
+        </div>
+        <div class="chioice-number">
+            <div class="item" data-category="1">
+                <span class="type">成人</span>
+                <span class="price">￥10299.00</span>
+                <div class="num-warp">
+                    <span class="count-btn minus">-</span>
+                    <span class="quantity">0</span>
+                    <span class="count-btn plus">+</span>
+                </div>
+            </div>
+            <div class="item" data-category="2">
+                <span class="type">儿童</span>
+                <span class="price">￥9299.00</span>
+                <div class="num-warp">
+                    <span class="count-btn minus">-</span>
+                    <span class="quantity">0</span>
+                    <span class="count-btn plus">+</span>
+                </div>
+            </div>
+        </div>
+        <div class="add-tourist">
+            <div class="tourist-hd">
+                <span>游客信息</span>
+            </div>
+            <div class="tourist-bd">
+            </div>
+        </div>
+    </div>
+    <div class="submit-wrap">
+        <div class="total" id="total">￥0</div>
+        <div class="submit-btn">提交</div>
+    </div>
+</div>
+
+<div class="container tourist-main hide">
+    <form name="edit-tourist-form" id="editTouristForm" action="javascript:;">
+        <div class="edit-tourist-wrap">
+            <div class="tourist-box">
+                <div class="item">
+                    <label class="label" for="name">姓名：</label>
+                    <div class="item-con">
+                        <input type="text" class="tourist-input" id="name" name="name">
+                    </div>
+                </div>
+                <div class="item">
+                    <label class="label" for="gender">性别：</label>
+                    <div class="item-con">
+              <span class="radio-box">
+                <input type="radio" id="male" name="gender" value="1" checked>
+                <label for="male">
+                  男
+                </label>
+              </span>
+                        <span class="radio-box">
+                <input type="radio" id="female" value="2" name="gender">
+                <label for="female">
+                  女
+                </label>
+              </span>
+                    </div>
+                </div>
+            </div>
+            <div class="tourist-box">
+                <div class="item">
+                    <label class="label" for="category">类型：</label>
+                    <div class="item-con">
+                        <select name="category" id="category">
+                            <option value="1">成人</option>
+                            <option value="2">儿童</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="item">
+                    <label class="label" for="idcardcategory">证件类型：</label>
+                    <div class="item-con">
+                        <select name="idcardcategory" id="idcardcategory">
+                            <option value="1">身份证</option>
+                            <option value="2">护照</option>
+                            <option value="3">退伍军官证</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="item">
+                    <label class="label" for="idCardNo">证件号：</label>
+                    <div class="item-con">
+                        <input type="text" class="tourist-input" name="idCardNo" id="idCardNo">
+                    </div>
+                </div>
+            </div>
+            <div class="tourist-box">
+                <div class="item">
+                    <label class="label" for="nativePlace">籍贯：</label>
+                    <div class="item-con">
+                        <input type="text" class="tourist-input" name="nativePlace" id="nativePlace">
+                    </div>
+                </div>
+                <div class="item">
+                    <label class="label" for="mobile">手机号：</label>
+                    <div class="item-con">
+                        <input type="text" class="tourist-input" name="mobile" id="mobile">
+                    </div>
+                </div>
+                <div class="item remark-item">
+                    <label class="label" for="remark">备注：</label>
+                    <div class="item-con">
+                        <textarea name="remark" id="remark"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-wrap">
+                <button class="btn btn-primary" id="btnSave">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        $('.sub-packages .item').on('click', function() {
+            $(this).addClass('active').siblings('.item').removeClass('active');
+        });
+
+        (function() {
+
+            var dataTourist = {};
+            var defaultTourists = {
+                name: '',
+                mobile: '',
+                idCardNo: '',
+                gender: 1,
+                idcardcategory: 1,
+                remark: '',
+                nativePlace: '',
+                idCardNo: ''
+            };
+
+            var touristsTmpl = [
+                '<i class="edit"></i>',
+                '<div class="info">',
+                '<p>姓名：<span class="name">未输入姓名</span><span class="mr10"></span>',
+                '手机号：<span class="mobile">联系方式不全</span></p>',
+                '<p>身份证号：<span class="idCardNo">身份信息不全</span></p></div>',
+                '<i class="delete tourist-delete"></i><input type="hidden" class="touristData" value='+ JSON.stringify(defaultTourists) +' />'
+            ];
+
+            calcTotal();
+
+            $('.plus').on('click', function() {
+                var category = $(this).closest('.item').attr('data-category') || 1;
+                var item = '<div class="item" data-category="' + category + '"></div>';
+                $('.add-tourist .tourist-bd').append(item);
+                $('.add-tourist .tourist-bd').find('.item:last').html(touristsTmpl.join(''));
+
+                calcItemTotal($(this), 'plus');
+                calcTotal();
+            });
+
+            $('.minus').on('click', function() {
+                var category = $(this).closest('.item').attr('data-category') || 1;
+
+                $('.add-tourist').find('.item[data-category="' + category + '"]:last').remove();
+
+                calcItemTotal($(this), 'minus');
+                calcTotal();
+            });
+
+            //删除单条游客信息
+            $('.add-tourist').on('click', '.tourist-delete', function(e) {
+                e.stopPropagation();
+                var item = $(this).closest('.item'),
+                    category = item.attr('data-category'),
+                    quantityEl = $('.chioice-number .item[data-category="' + category + '"]').find('.quantity'),
+                    quantity = quantityEl.text() || 0;
+
+                if (confirm('确定删除该游客信息吗？')) {
+                    quantityEl.text(--quantity);
+                    item.remove();
+                }
+            });
+
+            //点击编辑游客信息
+            $('.add-tourist').on('click', '.item', function() {
+                var item = $(this).closest('.item'),
+                    category = item.attr('data-category') || 1,
+                    dataTourist = JSON.parse(item.find('.touristData').val());
+                $('.order-main').addClass('hide');
+                $('.tourist-main').removeClass('hide');
+
+                setTouristFormInfo(dataTourist, category, function(data) {
+                    setItemTouristInfo(item, data);
+                    $('.tourist-main').addClass('hide');
+                    $('.order-main').removeClass('hide');
+                });
+
+            });
+
+            function calcItemTotal(elem, action) {
+                var $quantityEl = elem.siblings('.quantity'),
+                    $quantity = parseInt($quantityEl.text()),
+                    $sblquantity = parseInt($quantityEl.closest('.item').siblings('.item').find('.quantity').text());
+
+                if (action == 'plus') {
+                    $quantity += 1;
+                } else {
+                    $quantity == 0 ? $quantity = 0 : $quantity -= 1;
+                }
+
+                if (($quantity + $sblquantity) > 10) {
+                    alert('超过可预订人数');
+                    return;
+                }
+
+                $quantityEl.text($quantity);
+            }
+
+            function calcTotal() {
+                var $total = 0;
+                $('.chioice-number .item').each(function(index, el) {
+                    var $self = $(this),
+                        $price = parseInt($self.find('.price').text().slice(1)),
+                        $quantity = parseInt($self.find('.quantity').text()),
+                        $itemTotal = $price * $quantity;
+                    $total += $itemTotal;
+                });
+                $('#total').text('￥' + $total);
+            }
+
+            function setTouristFormInfo (data, category, callback) {
+                if (!data || !category) {
+                    return;
+                }
+
+                $('#name').val(data.name);
+                $('#mobile').val(data.mobile);
+                $('#idCardNo').val(data.idCardNo);
+                $('#remark').val(data.remark);
+                $('#idcardcategory').val(data.idcardcategory);
+                $('#nativePlace').val(data.nativePlace);
+                $('#category').val(category);
+                if (data.gender == 1) {
+                    $('#male').attr('checked', 'checked');
+                } else {
+                    $('#female').attr('checked', 'checked');
+                }
+
+                $('#btnSave').unbind("click"); //移除click
+
+                $('#btnSave').on('click', function (e) {
+                    e.stopPropagation();
+                    var touristData = util.paramcompare($('#editTouristForm').serializeArray());
+
+                    if (callback) {
+                        callback(touristData);
+                    }
+                });
+            }
+
+            function setItemTouristInfo (elem, data) {
+                if (!elem || !data) return;
+                var $elem = $(elem.get(0));
+                $elem.find('.name').text(data.name || '未输入姓名');
+                $elem.find('.mobile').text(data.mobile || '联系方式不全');
+                $elem.find('.idCardNo').text(data.idCardNo || '身份信息不全');
+                $elem.find('.touristData').val(JSON.stringify(data));
+            }
+
+        })();
+    });
+</script>
+</body>
+
+</html>
