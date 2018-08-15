@@ -193,16 +193,19 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 	//JSON格式
 	QH := r.FormValue("QH")
 	qhMap := make(map[string]string)
-	err = json.Unmarshal([]byte(QH), &qhMap)
-	if err != nil {
-		res.Code = 1
-		res.Msg = "请求头信息格式错误"
-		log.Println(err.Error())
-		SendJson(w, res)
-		return
+	if QH != "" {
+		err = json.Unmarshal([]byte(QH), &qhMap)
+		if err != nil {
+			res.Code = 1
+			res.Msg = "请求头信息格式错误"
+			log.Println(err.Error())
+			SendJson(w, res)
+			return
+		}
 	}
+
 	//组装测试参数
-	reqParam := &TestParam{
+	reqParam := TestParam{
 		Method: strings.ToLower(r.FormValue("Method")),
 		C:      C,
 		N:      N,
@@ -215,6 +218,7 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res.Data = reqParam
+	go StartTaskWork(reqParam)
 	SendJson(w, res)
 
 }

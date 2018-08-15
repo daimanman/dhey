@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
 	"net/http/httptrace"
@@ -72,6 +73,8 @@ type Work struct {
 	TaskId int
 
 	UrlFileId string
+
+	TestParam *TestParam
 }
 
 func (b *Work) writer() io.Writer {
@@ -298,4 +301,47 @@ func StartOneTask(method string, url string, N int, C int, dur time.Duration, ur
 	w.Run()
 
 	return nil
+}
+
+func StartTaskWork(testParam TestParam) {
+	taskId := GetTaskId()
+	testParam.TaskId = taskId
+
+	req, err := http.NewRequest(testParam.Method, testParam.Url, nil)
+	if err != nil {
+		testParam.Err = err.Error()
+		testParam.Status = 1
+		return
+	}
+	header := make(http.Header)
+	header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
+	for key, value := range testParam.QH {
+		header.Set(key, value)
+	}
+	N := testParam.N
+
+	dur, err := time.ParseDuration(testParam.Z)
+	if err == nil && dur > 0 {
+		log.Println("*******重置请求数N*************")
+		N = math.MaxInt32
+	}
+
+	w := &Work{
+		Request:   req,
+		N:         N,
+		C:         testParam.C,
+		QPS:       -1,
+		TaskId:    taskId,
+		UrlFileId: testParam.FileId,
+		Header:    &header,
+		TestParam: &testParam,
+	}
+	w.Init()
+	if dur > 0 {
+		go func() {
+			time.Sleep(dur)
+			w.Stop()
+		}()
+	}
+	w.Run()
 }

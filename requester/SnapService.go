@@ -9,17 +9,23 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"sync"
 )
 
 const (
-	fdir     = "fdir/"
-	snapdir  = "snap/"
-	urls     = "urls/"
-	filejson = "file.json"
-	taskid   = "task.id"
-	fileid   = "file.id"
-	urlsid   = "urls.id"
+	fdir       = "fdir/"
+	snapdir    = "snap/"
+	urls       = "urls/"
+	filejson   = "file.json"
+	taskid     = "task.id"
+	fileid     = "file.id"
+	urlsid     = "urls.id"
+	TYPE_FIXED = "fixed"
+	TYPE_RAND  = "rand"
+	TYPE_FILE  = "file"
 )
+
+var fileLock *sync.Mutex = new(sync.Mutex)
 
 var URLFILE_MAP_LIST map[string][]string
 
@@ -115,6 +121,7 @@ type PageInfo struct {
 }
 
 func getId(filePath string) int {
+
 	idfile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		log.Printf("read %s ocuur err %s \n", filePath, err.Error())
@@ -136,6 +143,7 @@ func getId(filePath string) int {
 	newJsonBs, _ := json.Marshal(tids)
 	idfile.WriteString(string(newJsonBs))
 	log.Printf("%s id is %d \n", filePath, tid)
+
 	return tid
 }
 func getFilePath(dir string, filename string) string {
@@ -251,6 +259,7 @@ func SaveSnapInfo(report Report) {
 
 //获取随机的url 如果解析随机文件失败则返回defaulturl
 func GetRandUrlFormUrlFile(urlfileId string, defaulturl string) string {
+
 	filename := urls + urlfileId + ".data"
 	if !PathExists(filename) {
 		log.Println(filename, " is not found")
@@ -261,6 +270,7 @@ func GetRandUrlFormUrlFile(urlfileId string, defaulturl string) string {
 	if urlLength > 0 {
 		return urlDatas[rand.Intn(urlLength-1)]
 	}
+	datas := make([]string, 10)
 
 	log.Printf("first read urlfileid %s \n", urlfileId)
 	fileBs, err := ioutil.ReadFile(filename)
@@ -268,10 +278,7 @@ func GetRandUrlFormUrlFile(urlfileId string, defaulturl string) string {
 		log.Println(err.Error())
 		return defaulturl
 	}
-
-	datas := make([]string, 10)
 	jsonErr := json.Unmarshal(fileBs, &datas)
-
 	if jsonErr != nil {
 		log.Println(jsonErr.Error())
 		return defaulturl
@@ -280,5 +287,6 @@ func GetRandUrlFormUrlFile(urlfileId string, defaulturl string) string {
 		return defaulturl
 	}
 	URLFILE_MAP_LIST[urlfileId] = datas
+
 	return datas[0]
 }
