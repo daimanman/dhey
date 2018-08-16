@@ -143,8 +143,40 @@ func getId(filePath string) int {
 	newJsonBs, _ := json.Marshal(tids)
 	idfile.WriteString(string(newJsonBs))
 	log.Printf("%s id is %d \n", filePath, tid)
-
 	return tid
+}
+func getAllIds(filePath string, curPage, pageSize int) (tids []int, total int) {
+	idfile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0777)
+	tids = make([]int, 0)
+	total = 0
+	if err != nil {
+		log.Printf("read %s ocuur err %s \n", filePath, err.Error())
+		return tids, total
+	}
+	defer idfile.Close()
+	bs, err := ioutil.ReadAll(idfile)
+	if err != nil {
+		log.Println(err.Error())
+		return tids, total
+	}
+	json.Unmarshal(bs, &tids)
+	total = len(tids)
+	if curPage <= 0 {
+		curPage = 1
+	}
+	if pageSize <= 0 {
+		pageSize = 10
+	}
+	totalPage := (total + pageSize - 1) / pageSize
+	if curPage > totalPage {
+		return []int{}, total
+	}
+	start := (curPage - 1) * pageSize
+	end := curPage * pageSize
+	if end > total {
+		end = total
+	}
+	return tids[start:end], total
 }
 func getFilePath(dir string, filename string) string {
 	return dir + filename
@@ -289,4 +321,75 @@ func GetRandUrlFormUrlFile(urlfileId string, defaulturl string) string {
 	URLFILE_MAP_LIST[urlfileId] = datas
 
 	return datas[0]
+}
+
+func SaveTestParam(testParam *TestParam) {
+	bs, err := json.Marshal(testParam)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	SaveFileString(snapdir, strconv.Itoa(testParam.TaskId)+".p", bs)
+}
+
+func getDataInfo(dir, fileSuffix string, id int) *map[string]interface{} {
+	data := make(map[string]interface{})
+	bs, err := ioutil.ReadFile(dir + strconv.Itoa(id) + fileSuffix)
+	if err != nil {
+		log.Println(err.Error())
+		return &data
+	}
+	json.Unmarshal(bs, &data)
+	return &data
+}
+
+func (pageInfo *PageInfo) getPageSize() int {
+	if pageInfo.PageSize <= 0 {
+		return 10
+	}
+	return pageInfo.PageSize
+}
+
+func (pageInfo *PageInfo) getCurPage() int {
+	if pageInfo.CurPage <= 0 {
+		return 1
+	}
+	return pageInfo.CurPage
+}
+func (pageInfo *PageInfo) QueryPageInfo(dir, idfile, fileSuffix string) {
+	curPage := pageInfo.getCurPage()
+	pageSize := pageInfo.getPageSize()
+
+	ids, total := getAllIds(dir+idfile, curPage, pageSize)
+	pageInfo.Count = total
+	pageInfo.Total = (total + pageSize - 1) / pageSize
+	Datas := make([]interface{}, 0, len(ids))
+	for _, id := range ids {
+		Datas = append(Datas, getDataInfo(dir, fileSuffix, id))
+	}
+	log.Printf("Datas len=%d cap=%d \n", len(Datas), cap(Datas))
+	pageInfo.Datas = Datas
+}
+
+func GetTaskPage(curPage, pageSize int) (pageInfo *PageInfo) {
+	pageInfo = &PageInfo{
+		CurPage:  curPage,
+		PageSize: pageSize,
+	}
+	pageInfo.QueryPageInfo(snapdir, taskid, ".p")
+	return pageInfo
+}
+
+//获取测试结果
+func GetTaskSnap(taskId string) *map[string]interface{} {
+	snap := make(map[string]interface{})
+	bs, err := ioutil.ReadFile(snapdir + taskId + ".snap")
+	snapPointer := &snap
+	if err != nil {
+		log.Println(err.Error())
+		return snapPointer
+	}
+	log.Printf("bs len = %d \n", len(bs))
+	json.Unmarshal(bs, snapPointer)
+	return snapPointer
 }

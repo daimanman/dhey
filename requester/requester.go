@@ -306,13 +306,15 @@ func StartOneTask(method string, url string, N int, C int, dur time.Duration, ur
 func StartTaskWork(testParam TestParam) {
 	taskId := GetTaskId()
 	testParam.TaskId = taskId
-
 	req, err := http.NewRequest(testParam.Method, testParam.Url, nil)
 	if err != nil {
 		testParam.Err = err.Error()
 		testParam.Status = 1
+		SaveTestParam(&testParam)
 		return
 	}
+	SaveTestParam(&testParam)
+
 	header := make(http.Header)
 	header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
 	for key, value := range testParam.QH {

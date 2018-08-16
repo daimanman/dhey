@@ -242,6 +242,27 @@ func GetRandUrl(w http.ResponseWriter, r *http.Request) {
 	url := GetRandUrlFormUrlFile(fileid, "baidu.com")
 	SendJson(w, url)
 }
+func GetIntVal(r *http.Request, key string, errPlan int) int {
+	value := r.FormValue(key)
+	i, err := strconv.Atoi(value)
+	if err != nil {
+		log.Println(err.Error())
+		return errPlan
+	}
+	return i
+}
+
+func QueryTaskPageController(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	curPage := GetIntVal(r, "curPage", 1)
+	pageSize := GetIntVal(r, "pageSize", 10)
+	SendJson(w, GetTaskPage(curPage, pageSize))
+}
+
+func GetTaskSnapController(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	SendJson(w, GetTaskSnap(r.FormValue("taskId")))
+}
 
 func StartServer() {
 	http.HandleFunc("/index", IndexController)
@@ -264,10 +285,11 @@ func StartStaticServer() {
 	heyHandlerMap["/TestOneTask"] = TestOneTask
 	heyHandlerMap["/GetRandUrl"] = GetRandUrl
 	heyHandlerMap["/StartMyTask"] = StartOneTaskController
+	heyHandlerMap["/QueryTaskPage"] = QueryTaskPageController
+	heyHandlerMap["/GetTaskSnap"] = GetTaskSnapController
 	log.Println("start")
 	err := heyServer.ListenAndServe()
 	if err != nil {
 		log.Println(err.Error())
 	}
-
 }
