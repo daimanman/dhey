@@ -43,7 +43,7 @@ type MyServer struct {
 type HandlersFunc func(http.ResponseWriter, *http.Request)
 
 func (*MyServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	urlStr := r.URL.String()
+	urlStr := r.URL.Path
 	h := heyHandlerMap[urlStr]
 	if h != nil {
 		h(w, r)
@@ -204,9 +204,11 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	payloadBs, _ := ioutil.ReadAll(r.Body)
+
 	//组装测试参数
 	reqParam := TestParam{
-		Method: strings.ToLower(r.FormValue("Method")),
+		Method: strings.ToUpper(r.FormValue("Method")),
 		C:      C,
 		N:      N,
 		Remark: r.FormValue("Remark"),
@@ -217,6 +219,21 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 		QH:     qhMap,
 	}
 
+	if len(payloadBs) > 0 {
+		reqParam.Payload = string(payloadBs)
+	}
+
+	ps := r.FormValue("P")
+	log.Println("ps", ps)
+	if ps != "" {
+		pm := make(map[string]interface{})
+		jsonErr := json.Unmarshal([]byte(ps), &pm)
+		if jsonErr != nil {
+			log.Println("解析参数JSON错误", jsonErr.Error())
+		} else {
+			reqParam.P = pm
+		}
+	}
 	res.Data = reqParam
 	go StartTaskWork(reqParam)
 	SendJson(w, res)
@@ -264,6 +281,16 @@ func GetTaskSnapController(w http.ResponseWriter, r *http.Request) {
 	SendJson(w, GetTaskSnap(r.FormValue("taskId")))
 }
 
+func TestPs(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	bs, _ := ioutil.ReadAll(r.Body)
+	log.Printf("bs length %d \n", len(bs))
+	log.Printf("name  = %s \n", r.FormValue("name"))
+	log.Printf("content-type = %s \n", r.Header.Get("Content-Type"))
+	urlValues := r.Form
+	SendJson(w, urlValues.Encode())
+}
+
 func StartServer() {
 	http.HandleFunc("/index", IndexController)
 	http.HandleFunc("/UpFile", UpFileController)
@@ -287,6 +314,7 @@ func StartStaticServer() {
 	heyHandlerMap["/StartMyTask"] = StartOneTaskController
 	heyHandlerMap["/QueryTaskPage"] = QueryTaskPageController
 	heyHandlerMap["/GetTaskSnap"] = GetTaskSnapController
+	heyHandlerMap["/TestPs"] = TestPs
 	log.Println("start")
 	err := heyServer.ListenAndServe()
 	if err != nil {

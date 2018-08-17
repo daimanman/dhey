@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"crypto/tls"
 	"errors"
+	"fmt"
+	"golang.org/x/net/http2"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,14 +14,17 @@ import (
 	"net/http/httptrace"
 	"net/url"
 	"os"
+	"strings"
 	"sync"
 	"time"
-
-	"golang.org/x/net/http2"
 )
 
 const maxResult = 1000000
 const maxIdleConns = 500
+const (
+	USER_AGENT          = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"
+	CONTENT_TYPE_NORMAL = "application/x-www-form-urlencoded"
+)
 
 type result struct {
 	err           error
@@ -119,12 +124,22 @@ func (b *Work) Finish() {
 
 func (b *Work) makeRequest(c *http.Client) {
 	s := now()
+	testParam := b.TestParam
 	var size int64
 	var code int
+	var req *http.Request
 	var dnsStart, connStart, resStart, reqStart, delayStart time.Duration
 	var dnsDuration, connDuration, resDuration, reqDuration, delayDuration time.Duration
 	//req := cloneRequest(b.Request, b.RequestBody)
-	req := createRandSimpleRequest(*b.Header, b.Method, b.SrcUrl, b.UrlFileId)
+	if testParam.Type == "FIXED" {
+		req = b.makeFormRequest()
+	} else {
+		req = b.makeRandRequest()
+		//req = createRandSimpleRequest(*b.Header, testParam.Method, testParam.Url, testParam.FileId)
+		//log.Printf("new Method=%s url=%s fileid=%s \n", testParam.Method, testParam.Url, testParam.FileId)
+		//log.Printf("old Method=%s url=%s fileid=%s \n", b.Method, b.SrcUrl, b.UrlFileId)
+		//req = createRandSimpleRequest(*b.Header, b.Method, b.SrcUrl, b.UrlFileId)
+	}
 	trace := &httptrace.ClientTrace{
 		DNSStart: func(info httptrace.DNSStartInfo) {
 			dnsStart = now()
@@ -249,6 +264,7 @@ func cloneRequest(r *http.Request, body []byte) *http.Request {
 
 //上传文件
 func createMultiPartRequest(h http.Header) *http.Request {
+
 	return nil
 }
 
@@ -260,8 +276,49 @@ func createRandSimpleRequest(h http.Header, method string, url string, urlfileId
 	for k, s := range h {
 		r2.Header[k] = append([]string(nil), s...)
 	}
+
 	return r2
 }
+
+//随机请求主要是从文件列表中获取随机访问的URL地址进行请求
+func (b *Work) makeRandRequest() *http.Request {
+	testParam := b.TestParam
+	defaultUrl := testParam.Url
+	header := b.Header
+	targetUrl := GetRandUrlFormUrlFile(testParam.FileId, defaultUrl)
+	r2, _ := http.NewRequest(testParam.Method, targetUrl, nil)
+	r2.Header = make(http.Header)
+	for k, v := range *header {
+		r2.Header[k] = append([]string(nil), v...)
+	}
+	return r2
+}
+
+//处理
+func (b *Work) makeFormRequest() *http.Request {
+	testParam := b.TestParam
+	defaultUrl := testParam.Url
+	header := b.Header
+	var reader *strings.Reader
+	fmt.Println("--------------", header.Get("Content-Type"))
+	if header.Get("Content-Type") == CONTENT_TYPE_NORMAL {
+		params := url.Values{}
+		for key, value := range testParam.P {
+			log.Println(key, value)
+			params.Add(key, fmt.Sprintf("%s", value))
+		}
+		reader = strings.NewReader(params.Encode())
+	} else {
+		reader = strings.NewReader(testParam.Payload)
+	}
+	r2, _ := http.NewRequest(testParam.Method, defaultUrl, reader)
+	r2.Header = make(http.Header)
+	for k, v := range *header {
+		r2.Header[k] = append([]string(nil), v...)
+	}
+	return r2
+}
+
 func min(a, b int) int {
 	if a > b {
 		return b
@@ -317,6 +374,8 @@ func StartTaskWork(testParam TestParam) {
 
 	header := make(http.Header)
 	header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
+	//设置默认的请求头
+	header.Set("Content-Type", CONTENT_TYPE_NORMAL)
 	for key, value := range testParam.QH {
 		header.Set(key, value)
 	}
@@ -337,6 +396,8 @@ func StartTaskWork(testParam TestParam) {
 		UrlFileId: testParam.FileId,
 		Header:    &header,
 		TestParam: &testParam,
+		Method:    testParam.Method,
+		SrcUrl:    testParam.Url,
 	}
 	w.Init()
 	if dur > 0 {

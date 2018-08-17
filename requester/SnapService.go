@@ -105,6 +105,12 @@ type TestParam struct {
 	Err string
 	//请求头信息
 	QH map[string]string
+
+	//查询参数
+	P map[string]interface{}
+
+	//Payload body 请求体
+	Payload string
 }
 
 type UrlParam struct {
@@ -117,6 +123,8 @@ type PageInfo struct {
 	PageSize int
 	Total    int
 	Count    int
+	Status   int
+	Hint     string
 	Datas    []interface{}
 }
 
