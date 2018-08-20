@@ -8,8 +8,10 @@ import (
 	"math/rand"
 	"os"
 	"path"
+	"sort"
 	"strconv"
 	"sync"
+	"time"
 )
 
 const (
@@ -27,6 +29,7 @@ const (
 
 var fileLock *sync.Mutex = new(sync.Mutex)
 
+//缓存文件
 var URLFILE_MAP_LIST map[string][]string
 
 func PathExists(path string) bool {
@@ -99,7 +102,7 @@ type TestParam struct {
 	Type string
 	//File 上传的文件id
 	FileId string
-	//测试结果状态
+	//测试结果状态 0 正在运行
 	Status int
 	//Err提示信息
 	Err string
@@ -111,6 +114,18 @@ type TestParam struct {
 
 	//Payload body 请求体
 	Payload string
+
+	//开始时间
+	StartTime time.Time
+
+	//结束时间
+	EndTime time.Time
+
+	//持续时间 EndTime-StartTime
+	Duration int64
+
+	//ReqNums
+	ReqNums int
 }
 
 type UrlParam struct {
@@ -132,7 +147,7 @@ func getId(filePath string) int {
 
 	idfile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
-		log.Printf("read %s ocuur err %s \n", filePath, err.Error())
+		log.Printf("read %s occur err %s \n", filePath, err.Error())
 		return -1
 	}
 	defer idfile.Close()
@@ -153,6 +168,7 @@ func getId(filePath string) int {
 	log.Printf("%s id is %d \n", filePath, tid)
 	return tid
 }
+
 func getAllIds(filePath string, curPage, pageSize int) (tids []int, total int) {
 	idfile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0777)
 	tids = make([]int, 0)
@@ -184,6 +200,9 @@ func getAllIds(filePath string, curPage, pageSize int) (tids []int, total int) {
 	if end > total {
 		end = total
 	}
+
+	sort.Sort(sort.Reverse(sort.IntSlice(tids)))
+
 	return tids[start:end], total
 }
 func getFilePath(dir string, filename string) string {
@@ -349,6 +368,36 @@ func getDataInfo(dir, fileSuffix string, id int) *map[string]interface{} {
 	}
 	json.Unmarshal(bs, &data)
 	return &data
+}
+
+//更新测试结果状态
+func UpdateFinshDataInfo(taskId int, reqNums int64) {
+	result := *getDataInfo(snapdir, ".p", taskId)
+	endTime := time.Now()
+	result["EndTime"] = endTime
+	startTime := result["StartTime"].(time.Time)
+	result["Duration"] = endTime.Unix() - startTime.Unix()
+	result["ReqNums"] = reqNums
+	result["Status"] = 1
+	UpdateDataInfo(&result)
+}
+func UpdateDataInfo(dataInfo *map[string]interface{}) {
+	taskId := *dataInfo["TaskId"].(float64)
+	filePath := snapdir + strconv.Itoa(taskId) + ".p"
+	idfile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0777)
+	if err != nil {
+		log.Printf("update %s occur err %s \n", filePath, err.Error())
+		return
+	}
+	defer idfile.Close()
+	idfile.Truncate(0)
+	idfile.Seek(0, 0)
+	jsonBs, jsonErr := json.Marshal(dataInfo)
+	if jsonErr != nil {
+		log.Printf("json.Marshal is err %s \n", jsonErr.Error())
+		return
+	}
+	idfile.WriteString(string(string(jsonBs)))
 }
 
 func (pageInfo *PageInfo) getPageSize() int {

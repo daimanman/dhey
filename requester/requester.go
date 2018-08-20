@@ -363,6 +363,7 @@ func StartOneTask(method string, url string, N int, C int, dur time.Duration, ur
 func StartTaskWork(testParam TestParam) {
 	taskId := GetTaskId()
 	testParam.TaskId = taskId
+	testParam.StartTime = time.Now()
 	req, err := http.NewRequest(testParam.Method, testParam.Url, nil)
 	if err != nil {
 		testParam.Err = err.Error()

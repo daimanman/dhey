@@ -1,0 +1,7 @@
+.top-container{
+    padding: 10px;
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    background-color: #01aaed;
+}

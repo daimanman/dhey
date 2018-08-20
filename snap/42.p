@@ -1,0 +1,1 @@
+{"C":1,"Z":"","N":1,"Remark":"压力测试","Url":"http://localhost:9188/go1","Method":"POST","TaskId":42,"Type":"FIXED","FileId":"4","Status":0,"Err":"","QH":{},"P":{"info":"TEsss颠三倒四ST","name":"DXwwM"},"Payload":"","StartTime":"2018-08-20T11:05:38.614335+08:00","Duration":0}

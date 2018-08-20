@@ -77,6 +77,7 @@ type Report struct {
 	ResLats   []float64
 	DelayLats []float64
 
+	//纳秒
 	Total time.Duration
 
 	ErrorDist      map[string]int
@@ -88,7 +89,9 @@ type Report struct {
 	LatencyDistribution []LatencyDistribution
 	Histogram           []Bucket
 
-	TaskId   int
+	TaskId int
+
+	//秒
 	Duration float64
 }
 
@@ -167,6 +170,7 @@ func (r *report) finalize(total time.Duration) {
 func (r *report) print() {
 	buf := &bytes.Buffer{}
 	snap := r.snapshot()
+	UpdateFinshDataInfo(snap.TaskId, snap.NumRes)
 	if err := newTemplate(r.output).Execute(buf, snap); err != nil {
 		log.Println("Error:", err.Error())
 		return
