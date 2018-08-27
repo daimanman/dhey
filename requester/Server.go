@@ -208,15 +208,16 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 
 	//组装测试参数
 	reqParam := TestParam{
-		Method: strings.ToUpper(r.FormValue("Method")),
-		C:      C,
-		N:      N,
-		Remark: r.FormValue("Remark"),
-		Url:    r.FormValue("Url"),
-		Type:   r.FormValue("Type"),
-		FileId: r.FormValue("FileId"),
-		Z:      Z,
-		QH:     qhMap,
+		Method:        strings.ToUpper(r.FormValue("Method")),
+		C:             C,
+		N:             N,
+		Remark:        r.FormValue("Remark"),
+		Url:           r.FormValue("Url"),
+		Type:          r.FormValue("Type"),
+		FileId:        r.FormValue("FileId"),
+		Z:             Z,
+		QH:            qhMap,
+		InputFileName: r.FormValue("InputFileName"),
 	}
 
 	if len(payloadBs) > 0 {

@@ -66,7 +66,7 @@ func init() {
 
 func main1() {
 	flag.Usage = func() {
-		fmt.Fprint(os.Stderr, fmt.Sprintf(usage, runtime.NumCPU()))
+		fmt.Fprint(os.Stderr, fmt.Sprintf(usagetest, runtime.NumCPU()))
 	}
 	flag.Parse()
 
@@ -361,6 +361,7 @@ func main1111() {
 	testFile()
 }
 
-func mainok() {
-	fmt.Println("test FDR")
+func maintest() {
+	//fmt.Println("test FDR")
+	main765()
 }

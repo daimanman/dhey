@@ -1,0 +1,1 @@
+{"C":1,"Duration":63670410003,"EndTime":"2018-08-21T09:00:03.3515864+08:00","Err":"","FileId":"4","Method":"POST","N":1,"P":{"info":"TEsss颠三倒四ST","name":"DXwwM"},"Payload":"","QH":{},"Remark":"压力测试","ReqNums":1,"StartTime":"2018-08-21T09:00:02.9485161+08:00","Status":1,"TaskId":47,"Type":"FIXED","Url":"http://localhost:9188/go1","Z":""}

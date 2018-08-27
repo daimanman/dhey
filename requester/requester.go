@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptrace"
 	"net/url"
@@ -82,6 +83,11 @@ type Work struct {
 	TestParam *TestParam
 }
 
+func init() {
+	log.SetPrefix("TRACE: ")
+	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
+}
+
 func (b *Work) writer() io.Writer {
 	if b.Writer == nil {
 		return os.Stdout
@@ -133,6 +139,8 @@ func (b *Work) makeRequest(c *http.Client) {
 	//req := cloneRequest(b.Request, b.RequestBody)
 	if testParam.Type == "FIXED" {
 		req = b.makeFormRequest()
+	} else if testParam.Type == "FILE" {
+		req = b.makeFileRequest()
 	} else {
 		req = b.makeRandRequest()
 		//req = createRandSimpleRequest(*b.Header, testParam.Method, testParam.Url, testParam.FileId)
@@ -294,7 +302,7 @@ func (b *Work) makeRandRequest() *http.Request {
 	return r2
 }
 
-//处理
+//处理-FIXED 请求
 func (b *Work) makeFormRequest() *http.Request {
 	testParam := b.TestParam
 	defaultUrl := testParam.Url
@@ -317,6 +325,48 @@ func (b *Work) makeFormRequest() *http.Request {
 		r2.Header[k] = append([]string(nil), v...)
 	}
 	return r2
+}
+
+//上传文件请求
+func (b *Work) makeFileRequest() *http.Request {
+	testParam := b.TestParam
+	url := testParam.Url
+	fid := testParam.FileId
+	fileInfo := GetFileInfo(fid)
+	fh, err := os.Open(fdir + fid + fileInfo.Ext)
+	if err != nil {
+		log.Println(err.Error())
+		return nil
+	}
+	defer func() {
+		fh.Close()
+	}()
+
+	buf := new(bytes.Buffer)
+	writer := multipart.NewWriter(buf)
+	formFile, ferr := writer.CreateFormFile(testParam.InputFileName, fileInfo.Name)
+	if ferr != nil {
+		log.Println(ferr.Error())
+		return nil
+	}
+	io.Copy(formFile, fh)
+	contentType := writer.FormDataContentType()
+	writer.Close()
+	request_reader := io.MultiReader(buf)
+	req, _ := http.NewRequest("POST", url, nil)
+	rc, ok := request_reader.(io.ReadCloser)
+	if !ok && request_reader != nil {
+		rc = ioutil.NopCloser(request_reader)
+	}
+	req.Body = rc
+
+	header := b.Header
+	req.Header = make(http.Header)
+	for k, v := range *header {
+		req.Header[k] = append([]string(nil), v...)
+	}
+	req.Header.Set("Content-Type", contentType)
+	return req
 }
 
 func min(a, b int) int {
@@ -363,7 +413,7 @@ func StartOneTask(method string, url string, N int, C int, dur time.Duration, ur
 func StartTaskWork(testParam TestParam) {
 	taskId := GetTaskId()
 	testParam.TaskId = taskId
-	testParam.StartTime = time.Now()
+	testParam.StartTime = time.Now().UnixNano()
 	req, err := http.NewRequest(testParam.Method, testParam.Url, nil)
 	if err != nil {
 		testParam.Err = err.Error()

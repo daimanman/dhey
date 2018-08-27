@@ -66,20 +66,24 @@ func init() {
 
 	//url文件id对应的请求列表
 	URLFILE_MAP_LIST = make(map[string][]string)
+
+	log.SetPrefix("TRACE: ")
+	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
+
 }
 
 //客户端上传到服务端的文件
 type FileInfo struct {
 	//文件名称
-	Name string
+	Name string `json:"Name"`
 	//文件大小
-	Size int64
+	Size int64 `json:"Size"`
 	//文件 id 系统内部使用
-	Fid int
+	Fid int `json:"Fid"`
 	//备注信息
-	Info string
+	Info string `json:"Info"`
 	//文件类型
-	Ext string
+	Ext string `json:"Ext"`
 }
 
 // 压力测试参数
@@ -116,16 +120,19 @@ type TestParam struct {
 	Payload string
 
 	//开始时间
-	StartTime time.Time
+	StartTime int64
 
 	//结束时间
-	EndTime time.Time
+	EndTime int64
 
 	//持续时间 EndTime-StartTime
 	Duration int64
 
 	//ReqNums
 	ReqNums int
+
+	//multipart/data file name
+	InputFileName string
 }
 
 type UrlParam struct {
@@ -370,19 +377,31 @@ func getDataInfo(dir, fileSuffix string, id int) *map[string]interface{} {
 	return &data
 }
 
+func GetFileInfo(fid string) *FileInfo {
+	fileInfo := &FileInfo{}
+	bs, err := ioutil.ReadFile(fdir + fid + ".info_")
+	if err != nil {
+		log.Println(err.Error())
+		return fileInfo
+	}
+	json.Unmarshal(bs, fileInfo)
+	return fileInfo
+}
+
 //更新测试结果状态
 func UpdateFinshDataInfo(taskId int, reqNums int64) {
 	result := *getDataInfo(snapdir, ".p", taskId)
 	endTime := time.Now()
-	result["EndTime"] = endTime
-	startTime := result["StartTime"].(time.Time)
-	result["Duration"] = endTime.Unix() - startTime.Unix()
+	result["EndTime"] = endTime.UnixNano()
+	result["Duration"] = endTime.UnixNano() - int64((result["StartTime"]).(float64))
 	result["ReqNums"] = reqNums
 	result["Status"] = 1
+	result["TaskId"] = taskId
 	UpdateDataInfo(&result)
 }
 func UpdateDataInfo(dataInfo *map[string]interface{}) {
-	taskId := *dataInfo["TaskId"].(float64)
+
+	taskId := (*dataInfo)["TaskId"].(int)
 	filePath := snapdir + strconv.Itoa(taskId) + ".p"
 	idfile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
