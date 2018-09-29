@@ -1,0 +1,1 @@
+{"C":1,"Duration":1067993292,"EndTime":1537235920661943500,"Err":"","FileId":"3","InputFileName":"file","Method":"POST","N":1,"P":null,"Payload":"","QH":{},"Remark":"压力测试","ReqNums":1,"StartTime":1537235919593950200,"Status":1,"TaskId":79,"Type":"FILE","Url":"http://127.0.0.1:9091/lhcenter/api/v1/oss","Z":""}

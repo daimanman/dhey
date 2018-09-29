@@ -32,6 +32,10 @@ var mimeTypeExt map[string]string = map[string]string{
 	".woff":  "application/x-font-woff",
 }
 
+const (
+	STATIC_PREFIX = "static/admin/"
+)
+
 type ResultMsg struct {
 	Code int
 	Msg  string
@@ -58,13 +62,17 @@ func setJsonHeader(w http.ResponseWriter) {
 //读取静态文件
 func SendStaticFile(w http.ResponseWriter, r *http.Request) {
 	urlPath := strings.TrimLeft(r.URL.Path, "/")
+	if urlPath == "" {
+		urlPath = "index.html"
+	}
 	ext := strings.ToLower(path.Ext(urlPath))
 	mimeType := mime.TypeByExtension(ext)
 	if mimeType == "" {
 		mimeType = mimeTypeExt[ext]
 	}
 	w.Header().Set("Content-Type", mimeType)
-	file, err := os.Open(urlPath)
+
+	file, err := os.Open(STATIC_PREFIX + urlPath)
 	if err != nil {
 		w.WriteHeader(404)
 		io.Copy(w, bytes.NewReader(make([]byte, 1)))
@@ -301,7 +309,7 @@ func StartServer() {
 	http.HandleFunc("/TestOneTask", TestOneTask)
 	http.HandleFunc("/GetRandUrl", GetRandUrl)
 	log.Printf("start a Server on 7654 \n")
-	http.ListenAndServe(":7654", nil)
+	http.ListenAndServe(":7655", nil)
 }
 
 func StartStaticServer() {

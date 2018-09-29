@@ -200,7 +200,9 @@ func (b *Work) makeRequest(c *http.Client) {
 
 func (b *Work) runWorker(client *http.Client, n int) {
 	var throttle <-chan time.Time
+
 	if b.QPS > 0 {
+		log.Printf("test QPS ---- %f \n", b.QPS)
 		throttle = time.Tick(time.Duration(1e6/(b.QPS)) * time.Microsecond)
 	}
 
@@ -267,6 +269,7 @@ func cloneRequest(r *http.Request, body []byte) *http.Request {
 	if len(body) > 0 {
 		r2.Body = ioutil.NopCloser(bytes.NewReader(body))
 	}
+	r2.Close = true
 	return r2
 }
 
@@ -308,11 +311,11 @@ func (b *Work) makeFormRequest() *http.Request {
 	defaultUrl := testParam.Url
 	header := b.Header
 	var reader *strings.Reader
-	fmt.Println("--------------", header.Get("Content-Type"))
+	//fmt.Println("--------------", header.Get("Content-Type"))
 	if header.Get("Content-Type") == CONTENT_TYPE_NORMAL {
 		params := url.Values{}
 		for key, value := range testParam.P {
-			log.Println(key, value)
+			//		log.Println(key, value)
 			params.Add(key, fmt.Sprintf("%s", value))
 		}
 		reader = strings.NewReader(params.Encode())

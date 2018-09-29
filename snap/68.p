@@ -1,0 +1,1 @@
+{"C":100,"Duration":10044204188,"EndTime":1537176775798803100,"Err":"","FileId":"3","InputFileName":"file","Method":"POST","N":1,"P":null,"Payload":"","QH":{},"Remark":"压力测试","ReqNums":14128,"StartTime":1537176765754599000,"Status":1,"TaskId":68,"Type":"FILE","Url":"http://192.168.1.192:9091/api/v1/oss","Z":"10s"}

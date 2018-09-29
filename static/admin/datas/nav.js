@@ -11,7 +11,12 @@ var navs = [
         "title": "任务列表",
         "icon": "&#xe63c;",
         "href": "task/task.html"
-    }]
+    }, {
+        "title": "TEST",
+        "icon": "&#xe63c;",
+        "href": "task/proto.html"
+    }
+    ]
 }
 
 ];

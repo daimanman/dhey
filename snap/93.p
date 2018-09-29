@@ -1,0 +1,1 @@
+{"C":5,"Duration":10017177952,"EndTime":1538207631148796000,"Err":"","FileId":"1","InputFileName":"","Method":"POST","N":100,"P":null,"Payload":"","QH":{},"Remark":"压测01 200 写 pg","ReqNums":107830,"StartTime":1538207621131618000,"Status":1,"TaskId":93,"Type":"FIXED","Url":"http://192.168.1.51:9090/testForm","Z":"10s"}
