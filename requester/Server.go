@@ -20,8 +20,8 @@ var (
 	heyServer = &http.Server{
 		Addr:           ":7654",
 		Handler:        &MyServer{},
-		ReadTimeout:    100 * time.Second,
-		WriteTimeout:   100 * time.Second,
+		ReadTimeout:    10 * time.Microsecond,
+		WriteTimeout:   10 * time.Microsecond,
 		MaxHeaderBytes: 1 << 30,
 	}
 	heyHandlerMap = make(map[string]HandlersFunc)
@@ -184,8 +184,11 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 	var err error
 	C, err := strconv.Atoi(r.FormValue("C"))
 	N, err := strconv.Atoi(r.FormValue("N"))
+	log.Printf("C is %s \n", r.FormValue("C"))
+	log.Printf("N is %s \n", r.FormValue("N"))
 	Z := r.FormValue("Z")
 	if err != nil {
+		log.Println(err)
 		res.Code = 1
 		res.Msg = "并发数，请求数为整数"
 		SendJson(w, res)
