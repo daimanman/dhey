@@ -1,0 +1,1 @@
+{"C":500,"Duration":119991327632,"EndTime":1539250622966285200,"Err":"","FileId":"1","InputFileName":"","Method":"POST","N":1,"P":null,"Payload":"","QH":{},"Remark":"1222 test pg ","ReqNums":1010,"StartTime":1539250502974957600,"Status":1,"TaskId":98,"Type":"FIXED","Url":"http://hs.lonhcloud.com/performsTest","Z":"1m"}

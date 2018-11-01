@@ -1,0 +1,107 @@
+2018/10/11 17:17:10  init dir and idfile 
+TRACE: 2018/10/11 17:17:10.704496 D:/GoPath/src/dhey/requester/Server.go:327: start
+TRACE: 2018/10/11 17:17:10.718498 D:/GoPath/src/dhey/requester/Server.go:330: listen tcp :7654: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+2018/10/11 17:22:13  init dir and idfile 
+TRACE: 2018/10/11 17:22:13.626783 D:/GoPath/src/dhey/requester/Server.go:327: start
+TRACE: 2018/10/11 17:24:52.578888 D:/GoPath/src/dhey/requester/Server.go:236: ps 
+TRACE: 2018/10/11 17:24:52.578888 D:/GoPath/src/dhey/requester/SnapService.go:175: snap/task.id id is 97 
+TRACE: 2018/10/11 17:24:52.579885 D:/GoPath/src/dhey/requester/requester.go:440: *******重置请求数N*************
+
+Summary:
+  Total:    119.8020 secs
+  Slowest:  63.0675 secs
+  Fastest:  57.9641 secs
+  Average:  60.4479 secs
+  Requests/sec: 4.3238
+  
+  Total data:   292433 bytes
+  Size/request: 564 bytes
+
+Response time histogram:
+  57.964 [1]	|
+  58.474 [5]	|
+  58.985 [4]	|
+  59.495 [5]	|
+  60.005 [18]	|■■
+  60.516 [425]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  61.026 [0]	|
+  61.536 [0]	|
+  62.047 [0]	|
+  62.557 [0]	|
+  63.067 [60]	|■■■■■■
+
+
+Latency distribution:
+  10% in 60.0336 secs
+  25% in 60.0385 secs
+  50% in 60.0844 secs
+  75% in 60.3707 secs
+  90% in 63.0167 secs
+  95% in 63.0186 secs
+  99% in 63.0665 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.3594 secs, 57.9641 secs, 63.0675 secs
+  DNS-lookup:   0.0063 secs, 0.0000 secs, 0.0120 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0030 secs
+  resp wait:    60.0883 secs, 57.9551 secs, 60.3657 secs
+  resp read:    0.0001 secs, 0.0000 secs, 0.0030 secs
+
+Status code distribution:
+  [200] 19 responses
+  [504] 499 responses
+
+
+Total Request 518 
+
+TRACE: 2018/10/11 17:35:02.973960 D:/GoPath/src/dhey/requester/Server.go:236: ps 
+TRACE: 2018/10/11 17:35:02.974957 D:/GoPath/src/dhey/requester/SnapService.go:175: snap/task.id id is 98 
+TRACE: 2018/10/11 17:35:02.974957 D:/GoPath/src/dhey/requester/requester.go:440: *******重置请求数N*************
+
+Summary:
+  Total:    119.9874 secs
+  Slowest:  63.0625 secs
+  Fastest:  0.0938 secs
+  Average:  44.6082 secs
+  Requests/sec: 8.4176
+  
+  Total data:   285320 bytes
+  Size/request: 282 bytes
+
+Response time histogram:
+  0.094 [1]	|
+  6.391 [55]	|■■■■
+  12.688 [59]	|■■■■■
+  18.984 [53]	|■■■■
+  25.281 [54]	|■■■■
+  31.578 [48]	|■■■■
+  37.875 [61]	|■■■■■
+  44.172 [50]	|■■■■
+  50.469 [50]	|■■■■
+  56.766 [64]	|■■■■■
+  63.062 [515]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+Latency distribution:
+  10% in 11.3667 secs
+  25% in 29.6667 secs
+  50% in 59.1070 secs
+  75% in 60.0007 secs
+  90% in 60.0026 secs
+  95% in 60.0037 secs
+  99% in 63.0575 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:   0.3138 secs, 0.0938 secs, 63.0625 secs
+  DNS-lookup:   0.0037 secs, 0.0000 secs, 0.0150 secs
+  req write:    0.0001 secs, 0.0000 secs, 0.0040 secs
+  resp wait:    44.0961 secs, 0.0888 secs, 60.0755 secs
+  resp read:    0.0001 secs, 0.0000 secs, 0.0040 secs
+
+Status code distribution:
+  [200] 524 responses
+  [504] 486 responses
+
+
+Total Request 1010 
+

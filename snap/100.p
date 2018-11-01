@@ -1,0 +1,1 @@
+{"C":500,"Duration":5492908380,"EndTime":1539334558515223900,"Err":"","FileId":"","InputFileName":"","Method":"POST","N":1,"P":null,"Payload":"","QH":{},"Remark":"","ReqNums":1017,"StartTime":1539334553022315500,"Status":1,"TaskId":100,"Type":"","Url":"http://192.168.1.53:9090/saveTest","Z":"3s"}
