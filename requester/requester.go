@@ -184,6 +184,8 @@ func (b *Work) makeRequest(c *http.Client) {
 		size = resp.ContentLength
 		code = resp.StatusCode
 		io.Copy(ioutil.Discard, resp.Body)
+		//respBytes, _ := ioutil.ReadAll(resp.Body)
+		//fmt.Printf("%s\n", respBytes)
 		resp.Body.Close()
 	}
 	t := now()
@@ -348,6 +350,7 @@ func (b *Work) makeLonhRequest(method string) *http.Request {
 		"findFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/findFiregroundpm",
 		"signOnline":        "http://task.lonhcloud.net/webmvc/v1/elementquery/signOnline",
 		"findGpsOnlinelist": "http://task.lonhcloud.net/webmvc/v1/elementquery/findGpsOnlinelist",
+		"sendTest":          "http://192.168.1.53:54321/testLh",
 	}
 	jsonBytes, _ := json.Marshal(lonhDataUtil.GetSaveFiregroundpmParam())
 	saveFiregroundpmParam := map[string]string{"data": string(jsonBytes)}
@@ -356,6 +359,7 @@ func (b *Work) makeLonhRequest(method string) *http.Request {
 		"findFiregroundpm":  lonhDataUtil.GetFindFiregroundpmParams(),
 		"signOnline":        lonhDataUtil.GetSignOnlineParam(),
 		"findGpsOnlinelist": lonhDataUtil.GetFindGpsOnlinelistParams(),
+		"sendTest":          map[string]string{"name": "daixiao", "age": "1233"},
 	}
 	targetUrl := lonhUrlMap[method]
 	targetParam := lonhParamMap[method]
@@ -366,7 +370,13 @@ func (b *Work) makeLonhRequest(method string) *http.Request {
 		params.Add(key, fmt.Sprintf("%s", value))
 	}
 	reader = strings.NewReader(params.Encode())
+	fmt.Println(params.Encode())
 	r2, _ := http.NewRequest("POST", targetUrl, reader)
+	r2.Header = make(http.Header)
+	header := b.Header
+	for k, v := range *header {
+		r2.Header[k] = append([]string(nil), v...)
+	}
 	return r2
 }
 

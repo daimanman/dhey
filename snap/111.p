@@ -1,0 +1,1 @@
+{"C":1,"Z":"","N":1,"Remark":"","Url":"","Method":"","TaskId":111,"Type":"LONH","FileId":"","Status":0,"Err":"","QH":{},"P":null,"Payload":"","StartTime":1551409108697275000,"EndTime":0,"Duration":0,"ReqNums":0,"InputFileName":"","LonhApi":"sendTest"}
