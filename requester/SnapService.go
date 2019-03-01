@@ -133,6 +133,8 @@ type TestParam struct {
 
 	//multipart/data file name
 	InputFileName string
+
+	LonhApi string
 }
 
 type UrlParam struct {

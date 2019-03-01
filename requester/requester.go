@@ -3,9 +3,9 @@ package requester
 import (
 	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/net/http2"
 	"io"
 	"io/ioutil"
 	"log"
@@ -18,6 +18,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/net/http2"
 )
 
 const maxResult = 1000000
@@ -141,6 +143,8 @@ func (b *Work) makeRequest(c *http.Client) {
 		req = b.makeFormRequest()
 	} else if testParam.Type == "FILE" {
 		req = b.makeFileRequest()
+	} else if testParam.Type == "LONH" {
+		req = b.makeLonhRequest(testParam.LonhApi)
 	} else {
 		req = b.makeRandRequest()
 		//req = createRandSimpleRequest(*b.Header, testParam.Method, testParam.Url, testParam.FileId)
@@ -327,6 +331,42 @@ func (b *Work) makeFormRequest() *http.Request {
 	for k, v := range *header {
 		r2.Header[k] = append([]string(nil), v...)
 	}
+	return r2
+}
+
+var lonhDataUtil *LonhData = &LonhData{}
+
+func init() {
+	log.Println("init lonh data")
+	lonhDataUtil.initData()
+}
+
+//返回隆回自定义的接口请求
+func (b *Work) makeLonhRequest(method string) *http.Request {
+	lonhUrlMap := map[string]string{
+		"saveFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/saveFiregroundpm",
+		"findFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/findFiregroundpm",
+		"signOnline":        "http://task.lonhcloud.net/webmvc/v1/elementquery/signOnline",
+		"findGpsOnlinelist": "http://task.lonhcloud.net/webmvc/v1/elementquery/findGpsOnlinelist",
+	}
+	jsonBytes, _ := json.Marshal(lonhDataUtil.GetSaveFiregroundpmParam())
+	saveFiregroundpmParam := map[string]string{"data": string(jsonBytes)}
+	lonhParamMap := map[string](map[string]string){
+		"saveFiregroundpm":  saveFiregroundpmParam,
+		"findFiregroundpm":  lonhDataUtil.GetFindFiregroundpmParams(),
+		"signOnline":        lonhDataUtil.GetSignOnlineParam(),
+		"findGpsOnlinelist": lonhDataUtil.GetFindGpsOnlinelistParams(),
+	}
+	targetUrl := lonhUrlMap[method]
+	targetParam := lonhParamMap[method]
+	var reader *strings.Reader
+	params := url.Values{}
+	for key, value := range targetParam {
+		//		log.Println(key, value)
+		params.Add(key, fmt.Sprintf("%s", value))
+	}
+	reader = strings.NewReader(params.Encode())
+	r2, _ := http.NewRequest("POST", targetUrl, reader)
 	return r2
 }
 

@@ -2,18 +2,12 @@ package main
 
 import (
 	"dhey/requester"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
-	"math"
-	"net/http"
-	gourl "net/url"
 	"os"
-	"os/signal"
 	"regexp"
 	"runtime"
-	"strings"
-	"time"
 )
 
 const (
@@ -85,154 +79,6 @@ Options:
 
 type headerSlice []string
 
-func main_() {
-	flag.Usage = func() {
-		fmt.Fprint(os.Stderr, fmt.Sprintf(usage, runtime.NumCPU()))
-	}
-
-	var hs headerSlice
-	flag.Var(&hs, "H", "")
-	flag.Parse()
-
-	fmt.Printf("NArg is %d \n", flag.NArg())
-
-	if flag.NArg() < 1 {
-		usageAndExit("")
-	}
-
-	runtime.GOMAXPROCS(*cpus)
-	num := *n
-	conc := *c
-	q := *q
-	dur := *z
-
-	if dur > 0 {
-		num = math.MaxInt32
-		if conc <= 0 {
-			usageAndExit("-c cannot be samller than 1.")
-		}
-	} else {
-		if num <= 0 || conc <= 0 {
-			usageAndExit("-n and -c cannot be smaller than 1.")
-		}
-
-		if num < conc {
-			usageAndExit("-n cannot be less than -c ")
-		}
-	}
-
-	url := flag.Args()[0]
-	method := strings.ToUpper(*m)
-
-	//set content-type
-	header := make(http.Header)
-	header.Set("Content-Type", *contentType)
-
-	//set and other additional headers
-	if *headers != "" {
-		usageAndExit("Flag 'h' is deprecated please use '-H' instead.")
-	}
-
-	for _, h := range hs {
-		match, err := parseInputWithRegexp(h, headerRegexp)
-		if err != nil {
-			usageAndExit(err.Error())
-		}
-		header.Set(match[1], match[2])
-	}
-
-	// set basic auth if set
-	var username, password string
-	if *authHeader != "" {
-		match, err := parseInputWithRegexp(*authHeader, authRegexp)
-		if err != nil {
-			usageAndExit(err.Error())
-		}
-		username, password = match[1], match[2]
-	}
-
-	var bodyAll []byte
-
-	if *body != "" {
-		bodyAll = []byte(*body)
-	}
-
-	if *bodyFile != "" {
-		slurp, err := ioutil.ReadFile(*bodyFile)
-		if err != nil {
-			errAndExit(err.Error())
-		}
-		bodyAll = slurp
-	}
-
-	var proyURL *gourl.URL
-	if *proxyAddr != "" {
-		var err error
-		proyURL, err = gourl.Parse(*proxyAddr)
-		if err != nil {
-			usageAndExit(err.Error())
-		}
-	}
-
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		usageAndExit(err.Error())
-	}
-
-	req.ContentLength = int64(len(bodyAll))
-	if username != "" || password != "" {
-		req.SetBasicAuth(username, password)
-	}
-
-	// set host header is set
-	if *hostHeader != "" {
-		req.Host = *hostHeader
-	}
-
-	ua := req.UserAgent()
-	if ua == "" {
-		ua = heyUA
-	} else {
-		ua += " " + heyUA
-	}
-	header.Set("User-Agent", ua)
-	req.Header = header
-
-	w := &requester.Work{
-		Request:             req,
-		RequestBody:         bodyAll,
-		N:                   num,
-		C:                   conc,
-		QPS:                 q,
-		Timeout:             *t,
-		DisableCommpression: *disableCompression,
-		DisableKeepAlives:   *disableKeepAlives,
-		DisableRedirects:    *disableRedirects,
-		H2:                  *h2,
-		ProxyAddr:           proyURL,
-		Output:              *output,
-	}
-
-	w.Init()
-
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	go func() {
-		<-c
-		w.Stop()
-	}()
-
-	if dur > 0 {
-		go func() {
-			time.Sleep(dur)
-			w.Stop()
-		}()
-	}
-
-	w.Run()
-
-}
-
 func errAndExit(msg string) {
 	if msg != "" {
 		fmt.Fprintf(os.Stderr, msg)
@@ -271,7 +117,75 @@ func (h *headerSlice) Set(value string) error {
 	return nil
 }
 
+//新增修改标会元素信息
+func testGetSaveFiregroundpm() {
+	lonhData := &requester.LonhData{}
+	jsonBytes, _ := json.Marshal(lonhData.GetSaveFiregroundpmParam())
+	urlParam := map[string]string{"data": string(jsonBytes)}
+	requester.LhSendPost("http://task.lonhcloud.net/webmvc/v1/fireground/saveFiregroundpm", urlParam)
+}
+
+//查询标会元素
+func testGetFindFiregroundpm() {
+	lonhData := &requester.LonhData{}
+	urlParam := lonhData.GetFindFiregroundpmParams()
+	requester.LhSendPost("http://task.lonhcloud.net/webmvc/v1/fireground/findFiregroundpm", urlParam)
+}
+
+//上线签到接口
+func testSignOnline() {
+	lonhData := &requester.LonhData{}
+	urlParam := lonhData.GetSignOnlineParam()
+	requester.LhSendPost("http://task.lonhcloud.net/webmvc/v1/elementquery/signOnline", urlParam)
+}
+
+//获取在线人员列表，返回政区/单位本级和下一级的在线人员列表
+func testFindGpsOnlinelist() {
+	lonhData := &requester.LonhData{}
+	urlParam := lonhData.GetFindGpsOnlinelistParams()
+	urlParam["all"] = "1"
+	requester.LhSendPost("http://task.lonhcloud.net/webmvc/v1/elementquery/findGpsOnlinelist", urlParam)
+}
+
+func testLonhApi(method string) {
+	lonhData := &requester.LonhData{}
+	lonhUrlMap := map[string]string{
+		"saveFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/saveFiregroundpm",
+		"findFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/findFiregroundpm",
+		"signOnline":        "http://task.lonhcloud.net/webmvc/v1/elementquery/signOnline",
+		"findGpsOnlinelist": "http://task.lonhcloud.net/webmvc/v1/elementquery/findGpsOnlinelist",
+	}
+	jsonBytes, _ := json.Marshal(lonhData.GetSaveFiregroundpmParam())
+	saveFiregroundpmParam := map[string]string{"data": string(jsonBytes)}
+
+	lonhParamMap := map[string](map[string]string){
+		"saveFiregroundpm":  saveFiregroundpmParam,
+		"findFiregroundpm":  lonhData.GetFindFiregroundpmParams(),
+		"signOnline":        lonhData.GetSignOnlineParam(),
+		"findGpsOnlinelist": lonhData.GetFindGpsOnlinelistParams(),
+	}
+	targetUrl := lonhUrlMap[method]
+	targetParam := lonhParamMap[method]
+	requester.LhSendPost(targetUrl, targetParam)
+
+}
 func main() {
 	//requester.StartServer()
 	requester.StartStaticServer()
+	//var idWorker requester.IdWorker
+	// idWorker = requester.IdWorker{}
+	// fmt.Println(idWorker.NextId())
+
+	// fmt.Println(lonhData.GetRndGpsId())
+	// fmt.Println(lonhData.GetRndAbcd())
+	// fmt.Println(lonhData.GetGpsPoints(10))
+	// fmt.Println(lonhData.GetSignOnlineParam())
+	//testFindGpsOnlinelist()
+	//testGetFindFiregroundpm()
+
+	//testLonhApi("saveFiregroundpm")
+	//testLonhApi("findFiregroundpm")
+	//testLonhApi("signOnline")
+	//testLonhApi("findGpsOnlinelist")
+
 }

@@ -229,6 +229,7 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 		Z:             Z,
 		QH:            qhMap,
 		InputFileName: r.FormValue("InputFileName"),
+		LonhApi:       r.FormValue("LonhApi"),
 	}
 
 	if len(payloadBs) > 0 {
@@ -327,7 +328,7 @@ func StartStaticServer() {
 	heyHandlerMap["/QueryTaskPage"] = QueryTaskPageController
 	heyHandlerMap["/GetTaskSnap"] = GetTaskSnapController
 	heyHandlerMap["/TestPs"] = TestPs
-	log.Println("start")
+	log.Printf("Start port is %s ", heyServer.Addr)
 	err := heyServer.ListenAndServe()
 	if err != nil {
 		log.Println(err.Error())

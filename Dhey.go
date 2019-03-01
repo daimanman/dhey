@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"dhey/requester"
 	"flag"
 	"fmt"
 	"io"
@@ -364,4 +365,9 @@ func main1111() {
 func maintest() {
 	//fmt.Println("test FDR")
 	main765()
+}
+
+func main909() {
+	idWorker := requester.IdWorker{}
+	fmt.Println(idWorker.NextId())
 }
