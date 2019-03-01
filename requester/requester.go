@@ -370,7 +370,6 @@ func (b *Work) makeLonhRequest(method string) *http.Request {
 		params.Add(key, fmt.Sprintf("%s", value))
 	}
 	reader = strings.NewReader(params.Encode())
-	fmt.Println(params.Encode())
 	r2, _ := http.NewRequest("POST", targetUrl, reader)
 	r2.Header = make(http.Header)
 	header := b.Header
