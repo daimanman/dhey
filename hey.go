@@ -171,7 +171,7 @@ func testLonhApi(method string) {
 }
 func main() {
 	//requester.StartServer()
-	requester.StartStaticServer()
+	//requester.StartStaticServer()
 	//var idWorker requester.IdWorker
 	// idWorker = requester.IdWorker{}
 	// fmt.Println(idWorker.NextId())
@@ -186,6 +186,6 @@ func main() {
 	//testLonhApi("saveFiregroundpm")
 	//testLonhApi("findFiregroundpm")
 	//testLonhApi("signOnline")
-	//testLonhApi("findGpsOnlinelist")
+	testLonhApi("findGpsOnlinelist")
 
 }

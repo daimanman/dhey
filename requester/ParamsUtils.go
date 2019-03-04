@@ -16,8 +16,9 @@ import (
 var idWorker *IdWorker = &IdWorker{}
 
 type LonhData struct {
-	Abcd  []string `json:"Abcd"`
-	Gpsid []string `json:"Gpsid"`
+	Abcd   []string `json:"Abcd"`
+	Gpsid  []string `json:"Gpsid"`
+	Abcdyn []string `json:Abcdyn`
 }
 
 //龙慧数据缓存
@@ -57,6 +58,18 @@ func (lonhData *LonhData) GetRndAbcd() string {
 	size := len(LonhDataParam.Abcd)
 	rnd := rand.Intn(size)
 	return LonhDataParam.Abcd[rnd]
+}
+
+//获取随机云南省区域id
+func (lonhData *LonhData) GetRndAbcdyn() string {
+	if len(LonhDataParam.Abcdyn) == 0 {
+		fmt.Println("初始化lonhData")
+		lonhData.initData()
+	}
+	rand.Seed(time.Now().Unix())
+	size := len(LonhDataParam.Abcdyn)
+	rnd := rand.Intn(size)
+	return LonhDataParam.Abcdyn[rnd]
 }
 
 //获取点线数据 如果是线 则为多个点
@@ -133,6 +146,6 @@ func (lonhData *LonhData) GetFindFiregroundpmParams() map[string]string {
 func (lonhData *LonhData) GetFindGpsOnlinelistParams() map[string]string {
 	param := make(map[string]string)
 	param["projectid"] = "slfh"
-	param["adcd"] = lonhData.GetRndAbcd()
+	param["adcd"] = lonhData.GetRndAbcdyn()
 	return param
 }
