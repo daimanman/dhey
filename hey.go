@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	_ "net/http/pprof"
 	"os"
 	"regexp"
 	"runtime"
+	"unicode/utf8"
 )
 
 const (
@@ -169,9 +171,19 @@ func testLonhApi(method string) {
 	requester.LhSendPost(targetUrl, targetParam)
 
 }
+
+func testStr() {
+	var name string
+	name = "abc我是中国人"
+	fmt.Printf("%d\n", len(name))
+	fmt.Printf("%d\n", utf8.RuneCountInString(name))
+	for i, c := range []rune(name) {
+		fmt.Printf("(%d - %c ) \n", i, c)
+	}
+}
 func main() {
 	//requester.StartServer()
-	//requester.StartStaticServer()
+	requester.StartStaticServer()
 	//var idWorker requester.IdWorker
 	// idWorker = requester.IdWorker{}
 	// fmt.Println(idWorker.NextId())
@@ -186,6 +198,8 @@ func main() {
 	//testLonhApi("saveFiregroundpm")
 	//testLonhApi("findFiregroundpm")
 	//testLonhApi("signOnline")
-	testLonhApi("findGpsOnlinelist")
+	//testLonhApi("findGpsOnlinelist")
+
+	//testStr()
 
 }

@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	_ "net/http/pprof"
 )
 
 var (
