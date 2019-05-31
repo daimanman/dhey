@@ -21,8 +21,8 @@ var (
 	heyServer = &http.Server{
 		Addr:           ":7654",
 		Handler:        &MyServer{},
-		ReadTimeout:    10000 * time.Microsecond,
-		WriteTimeout:   10000 * time.Microsecond,
+		ReadTimeout:    100000 * time.Microsecond,
+		WriteTimeout:   100000 * time.Microsecond,
 		MaxHeaderBytes: 1 << 30,
 	}
 	heyHandlerMap = make(map[string]HandlersFunc)

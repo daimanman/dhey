@@ -3,30 +3,21 @@
 <head>
     <title>Proto</title>
     <script type="text/javascript" src="../jquery/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="gpsData.js"></script>
+
     
 
 </head>
 <body>
-TEST PROTO
+<div>
+    <form enctype="multipart/form-data" action="http://localhost:7654/UpFile" method="POST">
+            文件：<input type="file" name="file" /><input type="submit" value="上传" />
+    </form>
+</div>
 
 </body>
 </html>
 <script type="text/javascript">
     
-    (function(){
-            var gps = new proto.gps_data();
-            var st = "810026195048495545495045495532495458504958525233-707312243794644157-76-56118-66-113676456172185-102-103-1565";
-            gps.setId(2)
-            gps.setDatatime("2018-09-99")
-            console.log(gps.serializeBinary());
-            console.log(gps.serializeBinary().join(""));
-           1 && $.ajax({
-                url:"http://localhost:9090/pt",
-                type:"post",
-                contentType:"applicaiton/json;charset=utf-8",
-                data:st
-            })
-    })();
+
 
 </script>
