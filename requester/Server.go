@@ -14,14 +14,15 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	_ "net/http/pprof"
 )
 
 var (
 	heyServer = &http.Server{
 		Addr:           ":7654",
 		Handler:        &MyServer{},
-		ReadTimeout:    10 * time.Microsecond,
-		WriteTimeout:   10 * time.Microsecond,
+		ReadTimeout:    100000 * time.Microsecond,
+		WriteTimeout:   100000 * time.Microsecond,
 		MaxHeaderBytes: 1 << 30,
 	}
 	heyHandlerMap = make(map[string]HandlersFunc)
@@ -229,6 +230,7 @@ func StartOneTaskController(w http.ResponseWriter, r *http.Request) {
 		Z:             Z,
 		QH:            qhMap,
 		InputFileName: r.FormValue("InputFileName"),
+		LonhApi:       r.FormValue("LonhApi"),
 	}
 
 	if len(payloadBs) > 0 {
@@ -327,7 +329,7 @@ func StartStaticServer() {
 	heyHandlerMap["/QueryTaskPage"] = QueryTaskPageController
 	heyHandlerMap["/GetTaskSnap"] = GetTaskSnapController
 	heyHandlerMap["/TestPs"] = TestPs
-	log.Println("start")
+	log.Printf("Start port is %s ", heyServer.Addr)
 	err := heyServer.ListenAndServe()
 	if err != nil {
 		log.Println(err.Error())

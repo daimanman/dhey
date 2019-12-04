@@ -3,6 +3,7 @@ package requester
 import (
 	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -154,6 +155,8 @@ func (b *Work) makeRequest(c *http.Client) {
 		req = b.makeFormRequest()
 	} else if testParam.Type == "FILE" {
 		req = b.makeFileRequest()
+	} else if testParam.Type == "LONH" {
+		req = b.makeLonhRequest(testParam.LonhApi)
 	} else {
 		req = b.makeRandRequest()
 		//req = createRandSimpleRequest(*b.Header, testParam.Method, testParam.Url, testParam.FileId)
@@ -193,6 +196,8 @@ func (b *Work) makeRequest(c *http.Client) {
 		size = resp.ContentLength
 		code = resp.StatusCode
 		io.Copy(ioutil.Discard, resp.Body)
+		//respBytes, _ := ioutil.ReadAll(resp.Body)
+		//fmt.Printf("%s\n", respBytes)
 		resp.Body.Close()
 	}
 	t := now()
@@ -351,6 +356,49 @@ func (b *Work) makeFormRequest() *http.Request {
 		r2.Header[k] = append([]string(nil), v...)
 	}
 	r2.Header.Set("User-Agent", getRandUg())
+	return r2
+}
+
+var lonhDataUtil *LonhData = &LonhData{}
+
+func init() {
+	log.Println("init lonh data")
+	lonhDataUtil.initData()
+}
+
+//返回隆回自定义的接口请求
+func (b *Work) makeLonhRequest(method string) *http.Request {
+	lonhUrlMap := map[string]string{
+		"saveFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/saveFiregroundpm",
+		"findFiregroundpm":  "http://task.lonhcloud.net/webmvc/v1/fireground/findFiregroundpm",
+		"signOnline":        "http://task.lonhcloud.net/webmvc/v1/elementquery/signOnline",
+		"findGpsOnlinelist": "http://task.lonhcloud.net/webmvc/v1/elementquery/findGpsOnlinelist",
+		"sendTest":          "http://192.168.1.53:54321/testLh",
+	}
+	jsonBytes, _ := json.Marshal(lonhDataUtil.GetSaveFiregroundpmParam())
+	saveFiregroundpmParam := map[string]string{"data": string(jsonBytes)}
+	lonhParamMap := map[string](map[string]string){
+		"saveFiregroundpm":  saveFiregroundpmParam,
+		"findFiregroundpm":  lonhDataUtil.GetFindFiregroundpmParams(),
+		"signOnline":        lonhDataUtil.GetSignOnlineParam(),
+		"findGpsOnlinelist": lonhDataUtil.GetFindGpsOnlinelistParams(),
+		"sendTest":          map[string]string{"name": "daixiao", "age": "1233"},
+	}
+	targetUrl := lonhUrlMap[method]
+	targetParam := lonhParamMap[method]
+	var reader *strings.Reader
+	params := url.Values{}
+	for key, value := range targetParam {
+		//		log.Println(key, value)
+		params.Add(key, fmt.Sprintf("%s", value))
+	}
+	reader = strings.NewReader(params.Encode())
+	r2, _ := http.NewRequest("POST", targetUrl, reader)
+	r2.Header = make(http.Header)
+	header := b.Header
+	for k, v := range *header {
+		r2.Header[k] = append([]string(nil), v...)
+	}
 	return r2
 }
 

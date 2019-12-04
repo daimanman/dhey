@@ -1,1 +1,0 @@
-{"C":1000,"Z":"10s","N":10,"Remark":"压力测试","Url":"http://www.baidu.com","Method":"post","TaskId":23,"Type":"","FileId":"4","Status":0,"Err":"","QH":{}}

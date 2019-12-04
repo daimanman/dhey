@@ -1,1 +1,0 @@
-{"C":1,"Duration":65854324,"EndTime":1535337562683242100,"Err":"","FileId":"2","InputFileName":"file","Method":"POST","N":1,"P":{"info":"TEssssssssskkkkkk颠三倒四ST","name":"sssssDXwwM"},"Payload":"","QH":{},"Remark":"压力测试","ReqNums":1,"StartTime":1535337562617387800,"Status":1,"TaskId":59,"Type":"FILE","Url":"http://192.168.227.129:9090/api/v1/oss","Z":""}

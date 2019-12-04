@@ -1,1 +1,0 @@
-{"C":1,"Duration":10182430020,"EndTime":1547005104667788100,"Err":"","FileId":"1","InputFileName":"","Method":"GET","N":2,"P":null,"Payload":"","QH":{},"Remark":"1222 test pg ","ReqNums":2,"StartTime":1547005094485358000,"Status":1,"TaskId":108,"Type":"FIXED","Url":"https://www.cwbaoguowang.com/images/open.png","Z":""}

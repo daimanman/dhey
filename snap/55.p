@@ -1,1 +1,0 @@
-{"C":1,"Duration":0,"EndTime":1535006182,"Err":"","FileId":"4","Method":"POST","N":1,"P":{"info":"TEssssssssskkkkkk颠三倒四ST","name":"sssssDXwwM"},"Payload":"","QH":{},"Remark":"压力测试","ReqNums":1,"StartTime":1535006182,"Status":1,"TaskId":55,"Type":"FIXED","Url":"http://localhost:9188/go1","Z":""}

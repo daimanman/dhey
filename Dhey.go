@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"dhey/requester"
 	"flag"
 	"fmt"
 	"io"
@@ -10,77 +11,8 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"runtime"
-	"sync"
 	"time"
 )
-
-var (
-	h bool
-	v bool
-	s string
-)
-var once sync.Once
-var usagetest = `Usage: hey [options...] <url>
-
-Options:
-  -n  Number of requests to run. Default is 200.
-  -c  Number of requests to run concurrently. Total number of requests cannot
-      be smaller than the concurrency level. Default is 50.
-  -q  Rate limit, in queries per second (QPS). Default is no rate limit.
-  -z  Duration of application to send requests. When duration is reached,
-      application stops and exits. If duration is specified, n is ignored.
-      Examples: -z 10s -z 3m.
-  -o  Output type. If none provided, a summary is printed.
-      "csv" is the only supported alternative. Dumps the response
-      metrics in comma-separated values format.
-
-  -m  HTTP method, one of GET, POST, PUT, DELETE, HEAD, OPTIONS.
-  -H  Custom HTTP header. You can specify as many as needed by repeating the flag.
-      For example, -H "Accept: text/html" -H "Content-Type: application/xml" .
-  -t  Timeout for each request in seconds. Default is 20, use 0 for infinite.
-  -A  HTTP Accept header.
-  -d  HTTP request body.
-  -D  HTTP request body from file. For example, /home/user/file.txt or ./file.txt.
-  -T  Content-type, defaults to "text/html".
-  -a  Basic authentication, username:password.
-  -x  HTTP Proxy address as host:port.
-  -h2 Enable HTTP/2.
-
-  -host HTTP Host header.
-
-  -disable-compression  Disable compression.
-  -disable-keepalive    Disable keep-alive, prevents re-use of TCP
-                        connections between different HTTP requests.
-  -disable-redirects    Disable following of HTTP redirects
-  -cpus                 Number of used cpu cores.
-                        (default for current machine is %d cores)
-`
-
-func init() {
-	flag.BoolVar(&h, "h", false, "this help")
-	flag.BoolVar(&v, "v", false, "show version and exit")
-	flag.StringVar(&s, "s", "", "send `signal` to a master")
-
-}
-
-func main1() {
-	flag.Usage = func() {
-		fmt.Fprint(os.Stderr, fmt.Sprintf(usagetest, runtime.NumCPU()))
-	}
-	flag.Parse()
-
-	fmt.Printf("h=%t  s=%s nags=%d nflag=%d \n", h, s, flag.NArg(), flag.NFlag())
-	if h {
-		fmt.Printf("useage-----------")
-	}
-
-	url := flag.Args()[0]
-	var bodys []byte
-	bodys = []byte(url)
-	fmt.Printf("body length is %d \n", len(bodys))
-	fmt.Printf("args length %d url is %s \n", len(flag.Args()), url)
-}
 
 func main2() {
 
@@ -364,4 +296,9 @@ func main1111() {
 func maintest() {
 	//fmt.Println("test FDR")
 	main765()
+}
+
+func main909() {
+	idWorker := requester.IdWorker{}
+	fmt.Println(idWorker.NextId())
 }

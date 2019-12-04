@@ -1,1 +1,0 @@
-{"C":1,"Z":"","N":1,"Remark":"压力测试","Url":"http://192.168.227.129:9090/api/v1/oss","Method":"POST","TaskId":57,"Type":"FILE","FileId":"1","Status":0,"Err":"","QH":{},"P":{"info":"TEssssssssskkkkkk颠三倒四ST","name":"sssssDXwwM"},"Payload":"","StartTime":1535337257402090100,"EndTime":0,"Duration":0,"ReqNums":0,"InputFileName":"file"}
